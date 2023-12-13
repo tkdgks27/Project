@@ -1,40 +1,47 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import Btn3 from "../design/Btn3";
+
 
 const Useraccount = () => {
+  const [account, setAccount] = useState("");
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  
 
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
-  const [birthdate, setBirthdate] = useState("YYYY-MM-DD");
+  const [birthdate, setBirthdate] = useState("");
   const [email, setEmail] = useState("");
   const [code, setCode] = useState("");
   const [address, setAddress] = useState("");
+  const [addressDetail, setAddressDetail] = useState("");
 
   useEffect(() => {
-    document.title = "회원가입"
-  })
+    document.title = "회원가입";
+  });
 
-  
-  const handleSignUp = async () => {
-    try {
-      // 서버에 회원 가입 요청
-      const response = await axios.post('http://localhost:3001/api/signup', {
-        userId,
-        password,
-        email,
-        address,
+  const handleSignUp = () => {
+    axios
+      .post("http://localhost:3000/join.do", {
+        name: userId,
+        pw: password,
+        email: email,
+        address: address,
+        addressDetail : addressDetail,
+        "check.code": code,
+        birth: birthdate,
+      })
+      .then((res) => {
+        sessionStorage.setItem("t", res.data);
+        setAccount({ name: "", pw: "", email: "", address: "", addressDetail: "", birth: "" });
+        alert("회원가입 성공");
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        console.error("회원 가입 요청 실패:", error);
       });
-
-      console.log('SignUp Response:', response.data);
-      // 성공하고 alert 띄우고 main으로가게
-    } catch (error) {
-      console.error('Error during sign-up:', error);
-      // 실패 alert창
-    }
   };
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -44,6 +51,8 @@ const Useraccount = () => {
     console.log("생년월일:", birthdate);
     console.log("이메일:", email);
     console.log("주소:", address);
+    console.log("상세주소:", addressDetail);
+
   };
 
   const handlePasswordChange = (value) => {
@@ -62,7 +71,7 @@ const Useraccount = () => {
   };
 
   const handleCheckDuplicate = () => {
-    // 아이디 중복 확인 해야됨
+    // 아이디 중복 확인 필요
     console.log("중복 확인 버튼 클릭");
   };
 
@@ -119,7 +128,7 @@ const Useraccount = () => {
     cursor: "pointer",
     backgroundColor: "#3498db",
     color: "#fff",
-    border: "none",
+    border: "2px solid #fff",
     borderRadius: "5px",
     padding: "10px",
     fontSize: "10px",
@@ -133,12 +142,14 @@ const Useraccount = () => {
           아이디:
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
+              name="id"
               type="text"
               value={userId}
               onChange={(e) => setUserId(e.target.value)}
               style={inputStyle}
             />
             <button
+              name="check.id"
               type="button"
               onClick={handleCheckDuplicate}
               style={buttonStyle}
@@ -152,6 +163,7 @@ const Useraccount = () => {
           비밀번호:
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
+              name="pw"
               type="password"
               value={password}
               onChange={(e) => handlePasswordChange(e.target.value)}
@@ -180,8 +192,10 @@ const Useraccount = () => {
         <label style={labelStyle}>
           생년월일:
           <input
+            name="birth"
             type="text"
             value={birthdate}
+            placeholder="YYYY-MM-DD"
             onChange={(e) => setBirthdate(e.target.value)}
             style={inputStyle}
           />
@@ -191,6 +205,7 @@ const Useraccount = () => {
           이메일:
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
+              name="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -204,6 +219,7 @@ const Useraccount = () => {
           인증코드:
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
+              name="check.code"
               type="code"
               value={code}
               onChange={(e) => setCode(e.target.value)}
@@ -216,6 +232,7 @@ const Useraccount = () => {
         <label style={labelStyle}>
           주소:
           <input
+            name="address1"
             type="address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
@@ -226,16 +243,15 @@ const Useraccount = () => {
         <label style={labelStyle}>
           상세주소:
           <input
+            name="address2"
             type="address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
+            value={addressDetail}
+            onChange={(e) => setAddressDetail(e.target.value)}
             style={inputStyle}
           />
         </label>
 
-        <button onClick={handleSignUp} style={getDynamicInputStyle()}>
-          가입하기
-        </button>
+        <Btn3 onClick={handleSignUp}>가입하기</Btn3>
       </form>
     </div>
   );
