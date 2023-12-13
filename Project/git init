@@ -1,0 +1,24 @@
+[33mcommit ab44dd04bbbebbf4c35800ba0352f4ff39c4ba5d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mtest[m[33m, [m[1;31morigin/test[m[33m)[m
+Merge: 88484dc 2fd1fc2
+Author: tkdgks27 <tkdgks27@naver.com>
+Date:   Fri Dec 8 15:02:55 2023 +0900
+
+    test commit
+
+[33mcommit 88484dca0618588c44df9c00a209ee350b4d2ab8[m
+Author: tkdgks27 <tkdgks27@naver.com>
+Date:   Fri Dec 8 14:54:15 2023 +0900
+
+    second commit
+
+[33mcommit 2fd1fc24c4ca97eb3d63ba06bd13117045156bf4[m[33m ([m[1;32mfrontend[m[33m)[m
+Author: minho <152574713+ryouminho@users.noreply.github.com>
+Date:   Fri Dec 8 14:42:04 2023 +0900
+
+    first front
+
+[33mcommit c216f41df58050c7ff3f67be7e417e4941d06d01[m[33m ([m[1;31morigin/Frontend[m[33m)[m
+Author: tkdgks27 <tkdgks27@naver.com>
+Date:   Wed Dec 6 16:40:09 2023 +0900
+
+    start commit
