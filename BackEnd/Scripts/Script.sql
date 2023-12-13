@@ -12,3 +12,6 @@ SELECT * FROM PRO_MEMBER pm;
 CREATE TABLE pro_jwttoken(
 	pro_token varchar2(500 char) NOT null
 );
+
+ALTER TABLE pro_member
+ADD pro_admin varchar2(40 char);
