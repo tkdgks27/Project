@@ -46,7 +46,7 @@ const Useraccount = () => {
     }
 
     axios
-      .post("http://localhost:3000/join.do", {
+      .post("http://localhost:3001/join.do", {
         name: userId,
         pw: password,
         email: email,
@@ -95,12 +95,11 @@ const Useraccount = () => {
       alert("아이디를 입력하세요");
       return;
     }
-    axios.post("http://localhost:3000/id-check", {
-      type: "username",
-      value: userId,
+    axios.post("http://localhost:3001/check.id", {
+      userId: userId,
     })
     .then((res) => {
-      if (res.data.idDuplicate) {
+      if (res.data.userId) {
         alert("사용중인 아이디 입니다.");
       } else {
         alert("사용 가능한 아이디 입니다.");
@@ -110,6 +109,7 @@ const Useraccount = () => {
       console.error("중복 확인 요청 실패: ", error);
       alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
     });
+};
   };
 
   const SendCode = () => {
@@ -117,16 +117,13 @@ const Useraccount = () => {
       alert("이메일을 입력하세요");
       return;
     }
-    axios.post("http://localhost:3000/send-code", {
+    axios.post("http://localhost:3001/send-code", {
       email: email,
     })
     .then((res) => {
       alert("이메일 전송 성공");
     })
-    .catch((error) => {
-      console.error("이메일 전송요청 실패 : ", error);
-      alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
-    })
+    
   }
   
   const AddressFinder = () => {
@@ -220,7 +217,7 @@ const Useraccount = () => {
     fontSize: "10px",
     whiteSpace: "nowrap",
   };
-
+  const Useraccount = () => {
   return (
     <div style={containerStyle}>
       <form onSubmit={handleSubmit} style={formStyle}>
