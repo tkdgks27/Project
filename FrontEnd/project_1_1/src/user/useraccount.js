@@ -11,28 +11,13 @@ const Useraccount = () => {
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [birthdate, setBirthdate] = useState("");
   const [email, setEmail] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
-  const [codeCheck, setCodeCheck] = useState(true);
-
+  const [code, setCode] = useState("");
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
 
   useEffect(() => {
     document.title = "회원가입";
-    const script = document.createElement("script");
-    script.src =
-      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-  
-    script.onload = () => {
-      console.log("Daum PostCode script loaded");
-    };
-  
-    document.body.appendChild(script);
-  
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+  });
 
   const handleSignUp = () => {
     if (!userId || !password || !confirmPassword || !birthdate || !email || !address || !addressDetail) {
@@ -46,13 +31,13 @@ const Useraccount = () => {
     }
 
     axios
-      .post("http://localhost:3001/join.do", {
+      .post("http://localhost:3000/join.do", {
         name: userId,
         pw: password,
         email: email,
         address: address,
         addressDetail: addressDetail,
-        "check.code": verificationCode,
+        "check.code": code,
         birth: birthdate,
       })
       .then((res) => {
@@ -74,78 +59,6 @@ const Useraccount = () => {
       });
   };
 
-  
-  const handlePasswordChange = (value) => {
-    setPassword(value);
-    checkPasswordMatch(password, value);
-  };
-  
-  const handleConfirmPasswordChange = (value) => {
-    setConfirmPassword(value);
-    checkPasswordMatch(password, value);
-  };
-  
-  const checkPasswordMatch = (password, confirmPassword) => {
-    const isMatch = password === confirmPassword;
-    setIsPasswordMatch(isMatch);
-  };
-  
-  const idCheck = () => {
-    if (!userId) {
-      alert("아이디를 입력하세요");
-      return;
-    }
-    axios.post("http://localhost:3001/check.id", {
-      userId: userId,
-    })
-    .then((res) => {
-      if (res.data.userId) {
-        alert("사용중인 아이디 입니다.");
-      } else {
-        alert("사용 가능한 아이디 입니다.");
-      }
-    })
-    .catch((error) => {
-      console.error("중복 확인 요청 실패: ", error);
-      alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
-    });
-  };
-
-  const SendCode = () => {
-    if(!email) {
-      alert("이메일을 입력하세요");
-      return;
-    }
-    axios.post("http://localhost:3001/send-code", {
-      email: email,
-    })
-    .then((res) => {
-      alert("이메일 전송 성공");
-    })
-    
-  }
-  
-  const AddressFinder = () => {
-    if (window.daum && window.daum.Postcode) {
-      new window.daum.Postcode({
-        oncomplete: function (data) {
-          setAddress(data.address);
-          document.querySelector("input[name=address]").focus();
-        },
-      }).open();
-    }
-  };
-
- {/*const codeChecker = () =>{
-    if (verificationCode === sentVerificationCode) {
-      setCodeCheck(true);
-      alert("인증 성공!");
-    } else{
-      setCodeCheck(false);
-      alert("인증번호 불일치!")
-    }
-  } */}
-
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("아이디:", userId);
@@ -155,6 +68,26 @@ const Useraccount = () => {
     console.log("이메일:", email);
     console.log("주소:", address);
     console.log("상세주소:", addressDetail);
+  };
+
+  const handlePasswordChange = (value) => {
+    setPassword(value);
+    checkPasswordMatch(password, value);
+  };
+
+  const handleConfirmPasswordChange = (value) => {
+    setConfirmPassword(value);
+    checkPasswordMatch(password, value);
+  };
+
+  const checkPasswordMatch = (password, confirmPassword) => {
+    const isMatch = password === confirmPassword;
+    setIsPasswordMatch(isMatch);
+  };
+
+  const handleCheckDuplicate = () => {
+    // 아이디 중복 확인 필요
+    console.log("중복 확인 버튼 클릭");
   };
 
   const containerStyle = {
@@ -216,7 +149,7 @@ const Useraccount = () => {
     fontSize: "10px",
     whiteSpace: "nowrap",
   };
-  
+
   return (
     <div style={containerStyle}>
       <form onSubmit={handleSubmit} style={formStyle}>
@@ -233,7 +166,7 @@ const Useraccount = () => {
             <button
               name="check.id"
               type="button"
-              onClick={idCheck}
+              onClick={handleCheckDuplicate}
               style={buttonStyle}
             >
               중복확인
@@ -293,7 +226,7 @@ const Useraccount = () => {
               onChange={(e) => setEmail(e.target.value)}
               style={inputStyle}
             />
-            <button onClick={SendCode} style={buttonStyle}>코드전송</button>
+            <button style={buttonStyle}>코드전송</button>
           </div>
         </label>
 
@@ -302,35 +235,30 @@ const Useraccount = () => {
           <div style={{ display: "flex", alignItems: "center" }}>
             <input
               name="check.code"
-              type="text"
-              value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
+              type="code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
               style={inputStyle}
             />
-            <button style={buttonStyle}>코드확인</button> {/*//onClick={codeChecker} */}
+            <button style={buttonStyle}>코드확인</button>
           </div>
         </label>
 
         <label style={labelStyle}>
           주소:
-          <div style={{display: "flex", alignItems: "center"}}>
           <input
-            name="address"
+            name="address1"
             type="address"
             value={address}
-            readOnly
+            onChange={(e) => setAddress(e.target.value)}
             style={inputStyle}
           />
-          <button style={buttonStyle} onClick={AddressFinder}>
-              주소찾기
-          </button>
-          </div>
         </label>
 
         <label style={labelStyle}>
           상세주소:
           <input
-            name="addressDetail"
+            name="address2"
             type="address"
             value={addressDetail}
             onChange={(e) => setAddressDetail(e.target.value)}
