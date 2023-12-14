@@ -90,13 +90,17 @@ const Useraccount = () => {
     setIsPasswordMatch(isMatch);
   };
   
+  const idd = new FormData();
+  idd.append("userId", userId);
+  
   const idCheck = () => {
+    
     if (!userId) {
       alert("아이디를 입력하세요");
       return;
     }
-    axios.post("http://localhost:3001/check.id", {
-      userId: userId,
+    axios.post("http://localhost:3001/check.id", idd,{
+      withCredentials: true,
     })
     .then((res) => {
       if (res.data.userId) {
