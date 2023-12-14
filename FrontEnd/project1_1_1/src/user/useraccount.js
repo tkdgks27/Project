@@ -130,9 +130,10 @@ const Useraccount = () => {
     })
     .then((res) => {
       if (res.data.email) {
-        alert("이메일 전송 성공");
-      } else {
         alert("중복된 이메일입니다.");
+        
+      } else {
+        alert("이메일 전송 성공");
       }
     })
     // .catch((error) => {
