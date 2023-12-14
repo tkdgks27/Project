@@ -49,7 +49,7 @@ const Useraccount = () => {
   //코드 확인용 append 값
   const userCode = new FormData();
   userCode.append("verificationCode", verificationCode);
-  userCode.append("email", email);
+  // userCode.append("email", email);
   
   //email 중복확인 append 값
   const userEmail = new FormData();
@@ -136,10 +136,10 @@ const Useraccount = () => {
         alert("이메일 전송 성공");
       }
     })
-    // .catch((error) => {
-    //   console.error("이메일 전송 요청 실패:", error);
-    //   alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
-    // });
+    .catch((error) => {
+      console.error("이메일 전송 요청 실패:", error);
+      alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
+    });
   }
   
   const AddressFinder = () => {
@@ -159,10 +159,10 @@ const Useraccount = () => {
       return;
     }
     axios
-      .post("http://localhost:3001/verify-code", userCode, {
-         withCredentials: true, })
+      .post("http://localhost:3001/check.code", userCode, {
+         withCredentials: true,})
       .then((res) => {
-        if (res.data.isMatch) {
+        if (res.data.verificationCode) {
           alert("인증 성공!");
         } else {
           alert("인증 코드가 일치하지 않습니다.");
