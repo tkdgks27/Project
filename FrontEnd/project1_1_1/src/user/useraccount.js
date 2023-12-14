@@ -125,7 +125,7 @@ const Useraccount = () => {
       alert("이메일을 입력하세요");
       return;
     }
-    axios.post("http://localhost:3001/send-code", userEmail,{
+    axios.post("http://localhost:3001/check.email", userEmail,{
       withCredentials: true,
     })
     .then((res) => {
@@ -135,10 +135,10 @@ const Useraccount = () => {
         alert("중복된 이메일입니다.");
       }
     })
-    .catch((error) => {
-      console.error("이메일 전송 요청 실패:", error);
-      alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
-    });
+    // .catch((error) => {
+    //   console.error("이메일 전송 요청 실패:", error);
+    //   alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
+    // });
   }
   
   const AddressFinder = () => {
