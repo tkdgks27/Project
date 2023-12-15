@@ -7,11 +7,13 @@ const Useraccount = () => {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [birth, setBirth] = useState("");
   const [email, setEmail] = useState("");
+
   const [verificationCode, setVerificationCode] = useState("");
+  // const [confirmCode, setconfirmCode] = useState("");
+  // const [isCodeMatch, setIscodeMatch] = useState(true);
 
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
@@ -46,11 +48,10 @@ const Useraccount = () => {
   member.append("addressDetail", addressDetail);
   member.append("birth", birth);
 
-  
   //email 중복확인 append 값
   const userEmail = new FormData();
   userEmail.append("email", email);
-  
+
   const handleSignUp = () => {
     if (
       !id ||
@@ -60,17 +61,17 @@ const Useraccount = () => {
       !email ||
       !address ||
       !addressDetail
-      ) {
-        alert("모든 항목을 채워주세요.");
-        return;
-      }
-      
-      if (pw !== confirmPassword) {
-        alert("비밀번호 확인이 일치하지 않습니다.");
-        return;
-      }
-      
-      axios
+    ) {
+      alert("모든 항목을 채워주세요.");
+      return;
+    }
+
+    if (pw !== confirmPassword) {
+      alert("비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+
+    axios
       .post("http://localhost:3001/join.do", member, {
         withCredentials: true,
       })
@@ -84,50 +85,54 @@ const Useraccount = () => {
         alert("서버 연결 불안정으로 잠시 후 다시 시도해주세요");
       });
   };
-  
+
   const handlePasswordChange = (value) => {
     setPw(value);
     checkPasswordMatch(pw, value);
   };
-  
+
   const handleConfirmPasswordChange = (value) => {
     setConfirmPassword(value);
     checkPasswordMatch(pw, value);
   };
-  
+
   const checkPasswordMatch = (password, confirmPassword) => {
     const isMatch = password === confirmPassword;
     setIsPasswordMatch(isMatch);
   };
-  
+
+  // const ConFirmCheckCode = (value) => {
+
+  // }
+
   const idCheck = () => {
     if (!id) {
       alert("아이디를 입력하세요");
       return;
     }
     axios
-    .post("http://localhost:3001/check.id", idd, {
-      withCredentials: true,
-    })
-    .then((res) => {
-      if (res.data.id) {
-        alert("사용중인 아이디 입니다.");
-      } else {
-        alert("사용 가능한 아이디 입니다.");
-      }
-    })
-    .catch((error) => {
+      .post("http://localhost:3001/check.id", idd, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.data.id) {
+          alert("사용중인 아이디 입니다.");
+        } else {
+          alert("사용 가능한 아이디 입니다.");
+        }
+      })
+      .catch((error) => {
         console.error("중복 확인 요청 실패: ", error);
         alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
       });
-    };
-    
-    const SendCode = () => {
-      if (!email) {
-        alert("이메일을 입력하세요");
-        return;
-      }
-      axios
+  };
+
+  const SendCode = () => {
+    if (!email) {
+      alert("이메일을 입력하세요");
+      return;
+    }
+    axios
       .post("http://localhost:3001/check.email", userEmail, {
         withCredentials: true,
       })
@@ -142,28 +147,28 @@ const Useraccount = () => {
         console.error("이메일 전송 요청 실패:", error);
         alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
       });
-    };
-    
-    const AddressFinder = () => {
-      if (window.daum && window.daum.Postcode) {
-        new window.daum.Postcode({
-          oncomplete: function (data) {
-            setAddress(data.address);
-            document.querySelector("input[name=address]").focus();
-          },
-        }).open();
-      }
-    };
-    //코드 확인용 append 값
-    const userCode = new FormData();
-    userCode.append("verificationCode", verificationCode);
-    
-    const codeCheck = () => {
-      if (!verificationCode) {
-        alert("인증 코드를 입력하세요");
-        return;
-      }
-      axios
+  };
+
+  const AddressFinder = () => {
+    if (window.daum && window.daum.Postcode) {
+      new window.daum.Postcode({
+        oncomplete: function (data) {
+          setAddress(data.address);
+          document.querySelector("input[name=address]").focus();
+        },
+      }).open();
+    }
+  };
+  //코드 확인용 append 값
+  const userCode = new FormData();
+  userCode.append("verificationCode", verificationCode);
+
+  const codeCheck = () => {
+    if (!verificationCode) {
+      alert("인증 코드를 입력하세요");
+      return;
+    }
+    axios
       .post("http://localhost:3001/check.code", userCode, {
         withCredentials: true,
       })
@@ -177,13 +182,15 @@ const Useraccount = () => {
       .catch((error) => {
         console.error("인증 확인 요청 실패:", error);
 
-        if (error.response) {  // 서버 응답 왔을때
+        if (error.response) {
+          // 서버 응답 왔을때
           alert("서버 오류 : " + error.response.status);
-          
-        } else if (error.request){ //요청은 가는데 응답이 안올때
+        } else if (error.request) {
+          //요청은 가는데 응답이 안올때
           alert("서버 응답 오류");
-        } else{ // 요청 전송전에 에러발생
-          alert("요청 전송 중 오류 발생")
+        } else {
+          // 요청 전송전에 에러발생
+          alert("요청 전송 중 오류 발생");
         }
       });
   };
@@ -351,7 +358,12 @@ const Useraccount = () => {
               onChange={(e) => setVerificationCode(e.target.value)}
               style={inputStyle}
             />
-            <button onClick={codeCheck} style={buttonStyle}>
+            <button
+              name="check.code"
+              type="button"
+              onClick={codeCheck}
+              style={buttonStyle}
+            >
               코드확인
             </button>
           </div>
