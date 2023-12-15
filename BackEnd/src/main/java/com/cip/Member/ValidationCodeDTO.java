@@ -1,4 +1,4 @@
-package com.cip.Email;
+package com.cip.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class EmailDTO {
-	private String to;
-	private String id;
-	private Integer code;
+public class ValidationCodeDTO {
+	private String verificationCode;
 }

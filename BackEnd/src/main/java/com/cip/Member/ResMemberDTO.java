@@ -17,14 +17,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Setter
-@Getter
 @Entity(name="pro_member")
 public class ResMemberDTO {
-
-	
-
-	
 
 	@Id
 	@SequenceGenerator(sequenceName = "pro_seq", name = "nps", allocationSize = 1)
@@ -43,6 +37,9 @@ public class ResMemberDTO {
 	
 	@Column(name= "pro_address")
 	private String Address;
+	
+	@Column(name="pro_admin")
+	private String admin;
 	
 	
 	

@@ -1,4 +1,4 @@
-package com.cip.Email;
+package com.cip.Member;
 
 import java.util.Properties;
 
@@ -10,7 +10,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
 public class Mailconfig {
-	 @Value("${spring.mail.host}")
+	 	@Value("${spring.mail.host}")
 	    private String host;
 
 	    @Value("${spring.mail.port}")

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface JPA extends CrudRepository<ResMemberDTO, String>{
-	public abstract List<ResMemberDTO> findByIdLike(String s1);
-	public abstract List<ResMemberDTO> findByEmailLike(String s2);
+	public abstract List<ResMemberDTO> findByIdLike(String id);
+	public abstract List<ResMemberDTO> findByEmailLike(String email);
 //	public abstract List<Member>
 //	public abstract List<Member>
 }

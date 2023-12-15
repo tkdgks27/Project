@@ -1,17 +1,12 @@
 package com.cip.Member;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-@AllArgsConstructor
+
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
-public class ReqMemberDTO {
-	
-	private String address;
-	
-	private String addressDetail;
+public class ValidationIDJson {
 	
 }
