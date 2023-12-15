@@ -159,21 +159,23 @@ const Useraccount = () => {
       }).open();
     }
   };
-  //코드 확인용 append 값
-  const userCode = new FormData();
-  userCode.append("verificationCode", verificationCode);
-
+  
   const codeCheck = () => {
     if (!verificationCode) {
       alert("인증 코드를 입력하세요");
       return;
     }
+    //코드 확인용 append 값
+    const userCode = new FormData();
+    userCode.append("verificationCode", verificationCode);
+    
     axios
       .post("http://localhost:3001/check.code", userCode, {
         withCredentials: true,
       })
       .then((res) => {
-        if (res.data.verificationCode) {
+        const{ verificationCode } = res.data;
+        if (verificationCode) {
           alert("인증 성공!");
         } else {
           alert("인증 코드가 일치하지 않습니다.");
