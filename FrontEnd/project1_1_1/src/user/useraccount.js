@@ -178,9 +178,7 @@ const Useraccount = () => {
     //코드 확인용 append 값
     const userCode = new FormData();
     userCode.append("verificationCode", verificationCode);
-    
-    userCode.append("sentCode", sentCode);
-    
+
     axios
     .post("http://localhost:3001/check.code", userCode, {
       withCredentials: true,
@@ -188,6 +186,7 @@ const Useraccount = () => {
       .then((res) => {
         if (res.data) {
           alert("인증 성공!");
+          alert(res.data);
         } else {
           alert("인증 코드가 일치하지 않습니다.");
         }
