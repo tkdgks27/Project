@@ -28,9 +28,7 @@ public class MemberCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		boolean result = mDAO.checkID(id);
-		System.out.println(result);
 		return result;
-				
 	}
 	
 	@PostMapping(value="/check.email",
@@ -39,8 +37,6 @@ public class MemberCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		boolean emailAuth = mDAO.checkEmail(resm);
-		System.out.println(emailAuth);
-		System.out.println(resm);
 		if(emailAuth) {
 			mDAO.makeCode();
 			mDAO.sendCode(resm);
@@ -52,11 +48,13 @@ public class MemberCon {
 	
 	@PostMapping(value="/check.code",
 			produces="application/json; charset=utf-8")
-	public ValidationCodeJson codeCheck(ValidationCodeJson vDTO, HttpServletResponse res) {
+	public boolean codeCheck(@RequestParam("verificationCode") String verificationCode, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
+		System.out.println(mDAO.checkCode(verificationCode));
 		System.out.println(mDAO.getEmailCode());
-		return mDAO.checkCode(vDTO);
+		System.out.println(verificationCode);
+		return mDAO.checkCode(verificationCode);
 	}
 	
 	

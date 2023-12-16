@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class ValidationCodeJson {
-	private List<ValidationCodeDTO> ValidationCode;
+	private List<ValidationCodeDTO> verificationCode;
 }

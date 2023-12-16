@@ -11,4 +11,5 @@ public interface JPA extends CrudRepository<ResMemberDTO, String>{
 	public abstract List<ResMemberDTO> findByEmailLike(String email);
 //	public abstract List<Member>
 //	public abstract List<Member>
+	public abstract List<ResMemberDTO> findById(ResMemberJson resmj);
 }
