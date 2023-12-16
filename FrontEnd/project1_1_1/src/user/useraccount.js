@@ -10,35 +10,39 @@ const Useraccount = () => {
   const [isPasswordMatch, setIsPasswordMatch] = useState(true);
   const [birth, setBirth] = useState("");
   const [email, setEmail] = useState("");
-
-  const [verificationCode, setVerificationCode] = useState("");
-  // const [confirmCode, setconfirmCode] = useState("");
-  // const [isCodeMatch, setIscodeMatch] = useState(true);
+  const [sentCode, setSentCode] = useState("");
 
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
 
+  // 버튼 입력 체크 함수
+  const [IdChecked, setIdChecked] = useState(false);
+  const [EmailChecked, setEmailChecked] = useState(false);
+  const [CodeChecked, setCodeChecked] = useState(false);
+    
+    
+    
   useEffect(() => {
-    document.title = "회원가입";
+      document.title = "회원가입";
     const script = document.createElement("script");
     script.src =
-      "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-
+    "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    
     script.onload = () => {
       console.log("Daum PostCode script loaded");
     };
-
+    
     document.body.appendChild(script);
 
     return () => {
       document.body.removeChild(script);
     };
   }, []);
-
+  
   // id 중복확인 append 값
   const idd = new FormData();
   idd.append("id", id);
-
+  
   // 회원가입 append 값
   const member = new FormData();
   member.append("id", id);
@@ -47,11 +51,11 @@ const Useraccount = () => {
   member.append("address", address);
   member.append("addressDetail", addressDetail);
   member.append("birth", birth);
-
+  
   //email 중복확인 append 값
   const userEmail = new FormData();
   userEmail.append("email", email);
-
+  
   const handleSignUp = () => {
     if (
       !id ||
@@ -61,104 +65,110 @@ const Useraccount = () => {
       !email ||
       !address ||
       !addressDetail
-    ) {
-      alert("모든 항목을 채워주세요.");
-      return;
-    }
-
-    if (pw !== confirmPassword) {
-      alert("비밀번호 확인이 일치하지 않습니다.");
-      return;
-    }
+      ) {
+        alert("모든 항목을 채워주세요.");
+        return;
+      }
+      
+      if (pw !== confirmPassword) {
+        alert("비밀번호 확인이 일치하지 않습니다.");
+        return;
+      }
+      // 버튼 눌렀는지 체크
+      if (!IdChecked || !EmailChecked || !CodeChecked) {
+        alert("확인 버튼을 모두 눌러 확인 후 가입해주세요.");
+        return;
+      }
 
     axios
-      .post("http://localhost:3001/join.do", member, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        sessionStorage.setItem("t", res.data);
-        alert("회원가입 성공");
-        window.location.href = "/";
-      })
-      .catch((error) => {
-        console.error("회원 가입 요청 실패:", error);
-        alert("서버 연결 불안정으로 잠시 후 다시 시도해주세요");
-      });
+    .post("http://localhost:3001/join.do", member, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      sessionStorage.setItem("t", res.data);
+      alert("회원가입 성공");
+      window.location.href = "/";
+    })
+    .catch((error) => {
+      console.error("회원 가입 요청 실패:", error);
+      alert("서버 연결 불안정으로 잠시 후 다시 시도해주세요");
+    });
   };
-
+  
   const handlePasswordChange = (value) => {
     setPw(value);
     checkPasswordMatch(pw, value);
   };
-
+  
   const handleConfirmPasswordChange = (value) => {
     setConfirmPassword(value);
     checkPasswordMatch(pw, value);
   };
-
+  
   const checkPasswordMatch = (password, confirmPassword) => {
     const isMatch = password === confirmPassword;
     setIsPasswordMatch(isMatch);
   };
-
-  // const ConFirmCheckCode = (value) => {
-
-  // }
-
+  
   const idCheck = () => {
     if (!id) {
       alert("아이디를 입력하세요");
       return;
     }
     axios
-      .post("http://localhost:3001/check.id", idd, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.id) {
-          alert("사용중인 아이디 입니다.");
-        } else {
-          alert("사용 가능한 아이디 입니다.");
-        }
-      })
-      .catch((error) => {
-        console.error("중복 확인 요청 실패: ", error);
-        alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
-      });
+    .post("http://localhost:3001/check.id", idd, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      if (res.data) {
+        alert("사용 가능한 아이디 입니다.");
+      } else {
+        alert("사용중인 아이디 입니다.");
+      }
+    })
+    .catch((error) => {
+      console.error("중복 확인 요청 실패: ", error);
+      alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
+    });
+    setIdChecked(true);
   };
-
+  
   const SendCode = () => {
     if (!email) {
       alert("이메일을 입력하세요");
       return;
     }
     axios
-      .post("http://localhost:3001/check.email", userEmail, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.email) {
-          alert("중복된 이메일입니다.");
-        } else {
-          alert("이메일 전송 성공");
-        }
-      })
-      .catch((error) => {
-        console.error("이메일 전송 요청 실패:", error);
-        alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
-      });
+    .post("http://localhost:3001/check.email", userEmail, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      if (res.data) {
+        alert("이메일 전송 성공");
+      } else {
+        alert("중복된 이메일입니다.");
+      }
+    })
+    .catch((error) => {
+      console.error("이메일 전송 요청 실패:", error);
+      alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
+    });
+    setEmailChecked(true);
   };
-
+  
   const AddressFinder = () => {
     if (window.daum && window.daum.Postcode) {
       new window.daum.Postcode({
         oncomplete: function (data) {
           setAddress(data.address);
           document.querySelector("input[name=address]").focus();
+          document.querySelector("input[name=address]").readOnly = true;
         },
       }).open();
     }
   };
+  const [verificationCode, setVerificationCode] = useState("");
+  
   
   const codeCheck = () => {
     if (!verificationCode) {
@@ -168,15 +178,15 @@ const Useraccount = () => {
     //코드 확인용 append 값
     const userCode = new FormData();
     userCode.append("verificationCode", verificationCode);
-    
+
     axios
-      .post("http://localhost:3001/check.code", userCode, {
-        withCredentials: true,
+    .post("http://localhost:3001/check.code", userCode, {
+      withCredentials: true,
       })
       .then((res) => {
-        const{ verificationCode } = res.data;
-        if (verificationCode) {
+        if (res.data) {
           alert("인증 성공!");
+          alert(res.data);
         } else {
           alert("인증 코드가 일치하지 않습니다.");
         }
@@ -195,6 +205,7 @@ const Useraccount = () => {
           alert("요청 전송 중 오류 발생");
         }
       });
+      setCodeChecked(true);
   };
 
   const handleSubmit = (e) => {
@@ -357,7 +368,9 @@ const Useraccount = () => {
               name="verificationCode"
               type="text"
               value={verificationCode}
-              onChange={(e) => setVerificationCode(e.target.value)}
+              onChange={(e) => {
+                setVerificationCode(e.target.value);
+              }}
               style={inputStyle}
             />
             <button
@@ -378,7 +391,6 @@ const Useraccount = () => {
               name="address"
               type="address"
               value={address}
-              readOnly
               style={inputStyle}
             />
             <button style={buttonStyle} onClick={AddressFinder}>
