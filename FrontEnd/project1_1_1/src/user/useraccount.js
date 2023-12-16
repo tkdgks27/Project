@@ -14,10 +14,15 @@ const Useraccount = () => {
 
   const [address, setAddress] = useState("");
   const [addressDetail, setAddressDetail] = useState("");
+
+  // 버튼 입력 체크 함수
+  const [IdChecked, setIdChecked] = useState(false);
+  const [EmailChecked, setEmailChecked] = useState(false);
+  const [CodeChecked, setCodeChecked] = useState(false);
     
     
     
-    useEffect(() => {
+  useEffect(() => {
       document.title = "회원가입";
     const script = document.createElement("script");
     script.src =
@@ -68,7 +73,12 @@ const Useraccount = () => {
       if (pw !== confirmPassword) {
         alert("비밀번호 확인이 일치하지 않습니다.");
         return;
-    }
+      }
+      // 버튼 눌렀는지 체크
+      if (!IdChecked || !EmailChecked || !CodeChecked) {
+        alert("확인 버튼을 모두 눌러 확인 후 가입해주세요.");
+        return;
+      }
 
     axios
     .post("http://localhost:3001/join.do", member, {
@@ -111,15 +121,16 @@ const Useraccount = () => {
     })
     .then((res) => {
       if (res.data) {
-        alert("사용중인 아이디 입니다.");
-      } else {
         alert("사용 가능한 아이디 입니다.");
+      } else {
+        alert("사용중인 아이디 입니다.");
       }
     })
     .catch((error) => {
       console.error("중복 확인 요청 실패: ", error);
       alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
     });
+    setIdChecked(true);
   };
   
   const SendCode = () => {
@@ -132,16 +143,17 @@ const Useraccount = () => {
       withCredentials: true,
     })
     .then((res) => {
-      if (res.data.email) {
-        alert("중복된 이메일입니다.");
-      } else {
+      if (res.data) {
         alert("이메일 전송 성공");
+      } else {
+        alert("중복된 이메일입니다.");
       }
     })
     .catch((error) => {
       console.error("이메일 전송 요청 실패:", error);
       alert("서버 환경 불안정으로 잠시 후 다시 시도해주세요");
     });
+    setEmailChecked(true);
   };
   
   const AddressFinder = () => {
@@ -150,6 +162,7 @@ const Useraccount = () => {
         oncomplete: function (data) {
           setAddress(data.address);
           document.querySelector("input[name=address]").focus();
+          document.querySelector("input[name=address]").readOnly = true;
         },
       }).open();
     }
@@ -175,7 +188,6 @@ const Useraccount = () => {
       .then((res) => {
         if (res.data) {
           alert("인증 성공!");
-          alert(res.data);
         } else {
           alert("인증 코드가 일치하지 않습니다.");
         }
@@ -194,6 +206,7 @@ const Useraccount = () => {
           alert("요청 전송 중 오류 발생");
         }
       });
+      setCodeChecked(true);
   };
 
   const handleSubmit = (e) => {
@@ -379,7 +392,6 @@ const Useraccount = () => {
               name="address"
               type="address"
               value={address}
-              readOnly
               style={inputStyle}
             />
             <button style={buttonStyle} onClick={AddressFinder}>
