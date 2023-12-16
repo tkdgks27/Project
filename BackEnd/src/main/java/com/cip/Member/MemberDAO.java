@@ -55,9 +55,9 @@ public class MemberDAO {
 		return false;
 	}
 	
-	public ValidationCodeJson checkCode(ValidationCodeJson vDTO) {
+	public boolean checkCode(String verificationCode) {
 //		return getEmailCode().equals(vDTO);
-		ValidationCodeJson result = vDTO;
+		boolean result = getEmailCode().equals(verificationCode);
 		return result;
 	}
 	
