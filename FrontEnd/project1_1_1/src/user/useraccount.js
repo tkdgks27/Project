@@ -337,7 +337,7 @@ const Useraccount = () => {
           생년월일:
           <input
             name="birth"
-            type="text"
+            type="date"
             value={birth}
             placeholder="YYYY-MM-DD"
             onChange={(e) => setBirth(e.target.value)}
