@@ -60,12 +60,16 @@ public class MemberCon {
 	
 	@PostMapping(value="/join.do",
 				 produces="application/json; charset=utf-8")
-	public @ResponseBody ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, @RequestParam("address") String s1,
+	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, @RequestParam("address") String s1,
 															 @RequestParam("addressDetail") String s2, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		mDAO.makeMemberJWT(resm, s1, s2);
+		JwtToken mtoken = mDAO.makeMemberJWT(resm, s1, s2);
+		ResMemberDTO ptoken =  mDAO.parseJWT(mtoken);
+		System.out.println(mtoken);
+		System.out.println(ptoken);
 		ResMemberDTO savedMember = jpa.save(resm);
+		System.out.println(savedMember);
 		return ResponseEntity.ok(savedMember);
 	}
 	

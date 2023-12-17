@@ -3,6 +3,8 @@ package com.cip.Member;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,8 +23,11 @@ import lombok.Setter;
 public class ResMemberDTO {
 
 	@Id
-	@SequenceGenerator(sequenceName = "pro_seq", name = "nps", allocationSize = 1)
+	@SequenceGenerator(sequenceName = "pro_one_member_seq", name = "nps", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator= "nps")
+	@Column(name="pro_num")
+	private Integer num;
+	
 	@Column(name= "pro_id")
 	private String id;
 	
@@ -30,6 +35,7 @@ public class ResMemberDTO {
 	private String pw;
 	
 	@Column(name= "pro_birth")
+	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birth;
 	
 	@Column(name= "pro_email")
