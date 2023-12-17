@@ -40,6 +40,9 @@ public class MemberDAO {
 	public String getEmailCode() {
 			return emailCode;
 	}
+	public String getKey() {
+		return key;
+	}
 	
 //	1
 	public boolean checkID(String id) {
@@ -86,10 +89,9 @@ public class MemberDAO {
 	
 	
 //	2
-	public String generateKey() {
+	public void generateKey() {
 		UUID uuid = UUID.randomUUID();
 		key = uuid.toString();
-		return key;
 	}
 	
 	public JwtToken makeMemberJWT(ResMemberDTO resm, String s1, String s2) {
@@ -101,6 +103,7 @@ public class MemberDAO {
 			token= Jwts.builder()
 					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
 					.expiration(new Date(tokenExpiration))
+					.claim("num", resm.getNum())
 					.claim("id", resm.getId())
 					.claim("pw", resm.getPw())
 					.claim("birth", resm.getBirth())
@@ -121,13 +124,14 @@ public class MemberDAO {
 					.verifyWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
 					.build();
 			Claims c = jp.parseSignedClaims(token).getPayload();
+			Integer num = (Integer) c.get("num");
 			String id = (String) c.get("id");
 			String pw = (String) c.get("pw");
 			Date birth = sdf.parse((String) c.get("birth"));
 			String email = (String) c.get("email");
-			String address = (String) c.get("realAddress");
+			String address = (String) c.get("address");
 			String admin = (String) c.get("admin");
-			return new ResMemberDTO(id, pw, birth, email, address, admin);
+			return new ResMemberDTO(num ,id, pw, birth, email, address, admin);
 			} catch (Exception e) {
 			e.printStackTrace();
 			return null;
