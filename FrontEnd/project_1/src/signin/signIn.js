@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./signin.css";
 import Useraccount from "../user/useraccount";
 import Button from "../design/Button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Btn2 from "../design/Btn2";
 import axios from "axios";
 
@@ -11,9 +11,9 @@ const SignIn = () => {
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const navigate = useNavigate();
-  const membercheck = new FormData();
-  membercheck.append("id", id);
-  membercheck.append("pw", pw);
+  const validationCheck = new FormData();
+  validationCheck.append("id", id);
+  validationCheck.append("pw", pw);
 
 
   
@@ -48,22 +48,21 @@ const SignIn = () => {
   // const [loginSuccess, setLoginSuccess] = useState(false);
   // const [loginFailed, setLoginFailed] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.preventDefault();
     if (!id || !pw) {
       alert("아이디, 비밀번호를 모두 입력해주세요");
       return;
     }
     axios
-      .post("http://localhost:3001/login.do", membercheck, {
+      .post("http://localhost:3001/login.do", validationCheck, {
         withCredentials: true,
       })
       .then((res) => {
         if (res.data) {
-          sessionStorage.setItem("t", res.data);
+          // sessionStorage.setItem("t", res.data);
           alert("로그인 성공");
           navigate("/");
-        // setLoginSuccess(true);
-          // window.location.href = "/";
         } else {
           alert("로그인 실패");
         }
@@ -82,6 +81,8 @@ const SignIn = () => {
           alert("요청 전송 중 오류 발생");
         }
       });
+      // alert(validationCheck);
+      // navigate("/");
     };
     // useEffect(() => {
     //   if (loginSuccess) {

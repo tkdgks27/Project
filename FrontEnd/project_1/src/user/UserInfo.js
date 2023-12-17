@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const UserInfo = () => {
+    const [userInfo, setUserInfo] = useState(null);
 
     useEffect(() => {
         document.title = "회원정보 확인";
@@ -68,7 +69,7 @@ const UserInfo = () => {
 
   return (
     <div style={containerStyle}>
-        
+
     </div>
   )
 }
