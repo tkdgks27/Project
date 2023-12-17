@@ -7,6 +7,7 @@ import Useraccount from './user/useraccount';
 import NaverLogin from './signin/naverlogin';
 import FindId from './signin/findid';
 import MemberList from './user/membercheck';
+import UserInfo from './user/UserInfo';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/naverlogin" element={<NaverLogin />} />
         <Route path="/find" element={<FindId />} />
         <Route path="/member" element={<MemberList />} />
+        <Route path="/info" element={<UserInfo />} />
       </Routes>
     </Router>
   );

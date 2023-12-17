@@ -20,6 +20,12 @@ const Main = () => {
   const loginButtonStyle = {
     position: "absolute",
     top: "30px",
+    right: "90px",
+  };
+
+  const infoButtonStyle = {
+    position: "absolute",
+    top: "30px",
     right: "10px",
   };
 
@@ -32,6 +38,10 @@ const Main = () => {
       <br></br>
       <Link to="/signin" style={loginButtonStyle}>
         <button>로그인</button>
+      </Link>
+      <br />
+      <Link to="/info" style={infoButtonStyle}>
+        <button>회원정보</button>
       </Link>
       <br />
     </div>

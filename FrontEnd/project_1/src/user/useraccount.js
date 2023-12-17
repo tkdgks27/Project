@@ -42,15 +42,24 @@ const Useraccount = () => {
   // id 중복확인 append 값
   const idd = new FormData();
   idd.append("id", id);
+
+  // const [addressMerge, setAddressMerge] = useState({
+  //   address: "",
+  //   addressDetail: "",
+  // });
   
+  const mergedAddress = `${address}, ${addressDetail}`;
   // 회원가입 append 값
   const member = new FormData();
   member.append("id", id);
   member.append("pw", pw);
   member.append("email", email);
-  member.append("address", address);
-  member.append("addressDetail", addressDetail);
   member.append("birth", birth);
+  member.append("address", mergedAddress);
+  // member.append("address", address);
+  // member.append("addressDetail", addressDetail);
+
+
   
   //email 중복확인 append 값
   const userEmail = new FormData();
