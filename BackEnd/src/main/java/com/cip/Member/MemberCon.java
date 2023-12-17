@@ -51,26 +51,34 @@ public class MemberCon {
 	public boolean codeCheck(@RequestParam("verificationCode") String verificationCode, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		System.out.println(mDAO.checkCode(verificationCode));
-		System.out.println(mDAO.getEmailCode());
-		System.out.println(verificationCode);
 		return mDAO.checkCode(verificationCode);
 	}
 	
 	
 	@PostMapping(value="/join.do",
 				 produces="application/json; charset=utf-8")
-	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, @RequestParam("address") String s1,
-															 @RequestParam("addressDetail") String s2, HttpServletResponse res) {
+	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		JwtToken mtoken = mDAO.makeMemberJWT(resm, s1, s2);
-		ResMemberDTO ptoken =  mDAO.parseJWT(mtoken);
-		System.out.println(mtoken);
-		System.out.println(ptoken);
+		System.out.println(resm.getNum());
+		System.out.println(mDAO.getKey());
 		ResMemberDTO savedMember = jpa.save(resm);
-		System.out.println(savedMember);
 		return ResponseEntity.ok(savedMember);
+	}
+	
+	@PostMapping(value="/login.do",
+				produces="application/json; charset=utf-8")
+	public boolean loginDo(ResMemberDTO resm, HttpServletResponse res) {
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.addHeader("Access-Control-Allow-Credentials", "true");
+		boolean result = mDAO.login(resm);
+		mDAO.generateKey();
+		JwtToken jwt = mDAO.makeMemberJWT(resm);
+		ResMemberDTO parse = mDAO.parseJWT(jwt);
+		System.out.println(parse);
+		System.out.println(jwt);
+		System.out.println(result);
+		return result;
 	}
 	
 	@PostMapping(value="/parse.JWT",

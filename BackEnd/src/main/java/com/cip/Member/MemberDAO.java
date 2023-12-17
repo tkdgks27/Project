@@ -24,18 +24,17 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
 public class MemberDAO {
 	@Autowired
 	JPA jpa;
 	@Autowired
 	private JavaMailSender jms;
 	
-	private SimpleDateFormat sdf;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String key;
 	private String subject = "요청하신 인증번호입니다";
 	private String emailCode;
+	
 	
 	public String getEmailCode() {
 			return emailCode;
@@ -94,21 +93,20 @@ public class MemberDAO {
 		key = uuid.toString();
 	}
 	
-	public JwtToken makeMemberJWT(ResMemberDTO resm, String s1, String s2) {
+	public JwtToken makeMemberJWT(ResMemberDTO resm) {
 		Date now = new Date();
 		long tokenExpiration= now.getTime() + Duration.ofSeconds(20).toMillis();
 		String token = null;
-		String combinedAddress = s1 + "!" + s2;
 		try {
 			token= Jwts.builder()
-					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
+					.signWith(Keys.hmacShaKeyFor(getKey().getBytes("utf-8")))
 					.expiration(new Date(tokenExpiration))
 					.claim("num", resm.getNum())
 					.claim("id", resm.getId())
 					.claim("pw", resm.getPw())
 					.claim("birth", resm.getBirth())
 					.claim("email", resm.getEmail())
-					.claim("address", combinedAddress)
+					.claim("address", resm.getAddress())
 					.compact();
 			return new JwtToken(token);
 		} catch (Exception e) {
@@ -121,13 +119,13 @@ public class MemberDAO {
 		try {
 			String token = mtoken.getToken();
 			JwtParser jp = Jwts.parser()
-					.verifyWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
+					.verifyWith(Keys.hmacShaKeyFor(getKey().getBytes("utf-8")))
 					.build();
 			Claims c = jp.parseSignedClaims(token).getPayload();
 			Integer num = (Integer) c.get("num");
 			String id = (String) c.get("id");
 			String pw = (String) c.get("pw");
-			Date birth = sdf.parse((String) c.get("birth"));
+			Date birth = (Date) c.get("birth");
 			String email = (String) c.get("email");
 			String address = (String) c.get("address");
 			String admin = (String) c.get("admin");
@@ -142,8 +140,20 @@ public class MemberDAO {
 //	        
 //	    }
 	
-//	public void join(Member m) {
-//		
-//	}
+	public boolean login(ResMemberDTO resm) {
+		List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
+		
+		
+		System.out.println(result);
+		if (result != null && !result.isEmpty()) {
+			ResMemberDTO user = result.get(0);
+			if(resm.getPw().equals(user.getPw())) {
+				
+				return true;
+			}
+		}
+		return false;
+		
+	}
 	
 }

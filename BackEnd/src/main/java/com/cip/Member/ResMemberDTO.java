@@ -3,6 +3,7 @@ package com.cip.Member;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
@@ -16,6 +17,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.val;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -25,7 +27,7 @@ public class ResMemberDTO {
 	@Id
 	@SequenceGenerator(sequenceName = "pro_one_member_seq", name = "nps", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator= "nps")
-	@Column(name="pro_num")
+	@Column(name="pro_num", insertable = false, updatable = false)
 	private Integer num;
 	
 	@Column(name= "pro_id")
