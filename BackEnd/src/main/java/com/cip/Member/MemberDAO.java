@@ -111,6 +111,7 @@ public class MemberDAO {
 					.claim("birth", resm.getBirth())
 					.claim("email", resm.getEmail())
 					.claim("address", resm.getAddress())
+					.claim("admin", resm.getAdmin())
 					.compact();
 			return new JwtToken(token);
 		} catch (Exception e) {

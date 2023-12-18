@@ -13,6 +13,7 @@ const UserInfo = () => {
   const [pw, setPw] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [admin, setAd] = useState("");
 
 
   const connectionCheck = () => {
@@ -27,6 +28,8 @@ const UserInfo = () => {
     // memberInfo.append("pw", pw);
     // memberInfo.append("email", email);
     // memberInfo.append("address", address);
+    // memberInfo.append("admin", admin);
+
     
     axios
       .post("http://localhost:3001/parse.JWT", memberInfo, {
@@ -36,7 +39,7 @@ const UserInfo = () => {
         },
       })
       .then((res) => {
-        console.log("토큰 검증 성공", memberInfo);
+        console.log("토큰 검증 성공", setUserData);
         setUserData(memberInfo);
         // alert(userData); 
         // // alert(userId);

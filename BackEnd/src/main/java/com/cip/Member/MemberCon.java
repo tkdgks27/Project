@@ -80,7 +80,7 @@ public class MemberCon {
 		return null;
 	}
 	
-//	@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "true")
+//	@CrossOrigin(origins = "http://loginocalhost:3000", methods = {RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "true")
 	@PostMapping(value="/parse.JWT",
 			produces="application/json; charset=utf-8")
 	public ResMemberDTO jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
