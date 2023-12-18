@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -79,13 +80,14 @@ public class MemberCon {
 		return null;
 	}
 	
+//	@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "true")
 	@PostMapping(value="/parse.JWT",
 			produces="application/json; charset=utf-8")
-	public ResponseEntity<ResMemberDTO> jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
+	public ResMemberDTO jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		ResMemberDTO parse = mDAO.parseJWT(mjwt);
-		return ResponseEntity.ok(parse);
+		ResMemberDTO token = mDAO.parseJWT(mjwt);
+		return token;
 	}
 	
 	

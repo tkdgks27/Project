@@ -103,7 +103,7 @@ public class MemberDAO {
 		String token = null;
 		try {
 			token= Jwts.builder()
-					.signWith(Keys.hmacShaKeyFor(getKey().getBytes("utf-8")))
+					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
 					.expiration(new Date(tokenExpiration))
 					.claim("num", resm.getNum())
 					.claim("id", resm.getId())
@@ -123,7 +123,7 @@ public class MemberDAO {
 		try {
 			String token = mtoken.getToken();
 			JwtParser jp = Jwts.parser()
-					.verifyWith(Keys.hmacShaKeyFor(getKey().getBytes("utf-8")))
+					.verifyWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
 					.build();
 			Claims c = jp.parseSignedClaims(token).getPayload();
 			Integer num = (Integer) c.get("num");

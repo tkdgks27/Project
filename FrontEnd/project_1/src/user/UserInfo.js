@@ -4,27 +4,47 @@ import React, { useEffect, useState } from 'react';
 const UserInfo = () => {
   const [userData, setUserData] = useState(null);
   const token = sessionStorage.getItem("token");
-  const userId = sessionStorage.getItem('userId');
+  // const userId = sessionStorage.getItem('userId');
   // const headers = {
   //   Authorization: `Bearer ${token}`,
   // };
+
+  const [id, setId] = useState("");
+  const [pw, setPw] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+
+
   const connectionCheck = () => {
+    const memberInfo = {
+      id: id,
+      pw: pw,
+      email: email,
+      address: address,
+    } ;
+    // new FormData();
+    // memberInfo.append("id", id);
+    // memberInfo.append("pw", pw);
+    // memberInfo.append("email", email);
+    // memberInfo.append("address", address);
+    
     axios
-      .post("http://localhost:3001/parse.JWT", { token }, {
+      .post("http://localhost:3001/parse.JWT", memberInfo, {
         withCredentials: true,
         headers:{
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        console.log("토큰 검증 성공", token);
-        setUserData({id: "", pw:"", email:"", birth: "", address: "", });
-        alert(userData); 
+        console.log("토큰 검증 성공", memberInfo);
+        setUserData(memberInfo);
+        // alert(userData); 
+        // // alert(userId);
+        // alert(token);
+        // alert(res);
       })
       .catch((error) => {
         console.error('토큰 검증 중 오류 발생:', error);
-        // alert(userId);
-        // alert(token);
       });
   };
 
@@ -100,10 +120,11 @@ const UserInfo = () => {
         <form style={formStyle}>
           <p>아이디: {userData.id}</p>
           <br />
-          <p>이름: {token.name}</p>
+          <p>비밀번호: {userData.pw}</p>
           <br />
-          <p>이메일: {token.email}</p>
+          <p>이메일: {userData.email}</p>
           <br />
+          <p>주소: {userData.address}</p>
         </form>
         </>
       ) : (
