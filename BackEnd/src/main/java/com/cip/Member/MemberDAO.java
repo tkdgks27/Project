@@ -30,7 +30,7 @@ public class MemberDAO {
 	@Autowired
 	private JavaMailSender jms;
 	
-	private String key;
+	private static final String key = "123451234512345123451234512345123";
 	private String subject = "요청하신 인증번호입니다";
 	private String emailCode;
 	
@@ -89,7 +89,7 @@ public class MemberDAO {
 //	2
 	public void generateKey() {
 		UUID uuid = UUID.randomUUID();
-		key = uuid.toString();
+//		key = uuid.toString();
 	}
 	
 	public ResMemberDTO getInfo(ResMemberDTO resm) {

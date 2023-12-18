@@ -72,7 +72,6 @@ public class MemberCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		if(mDAO.login(resm)) {
-			mDAO.generateKey();
 			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
 			ResMemberDTO parse = mDAO.parseJWT(token);
 			return token;
@@ -83,7 +82,7 @@ public class MemberCon {
 	@PostMapping(value="/parse.JWT",
 			produces="application/json; charset=utf-8")
 	public ResponseEntity<ResMemberDTO> jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
-		res.addHeader("Access-Control-Allow-Origin", "localhost:3000");
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO parse = mDAO.parseJWT(mjwt);
 		return ResponseEntity.ok(parse);
