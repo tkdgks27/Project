@@ -60,6 +60,10 @@ const SignIn = () => {
     } else {
       alert("Access Token이 없습니다.");
     }
+
+
+
+    
   };
 
 
@@ -81,7 +85,6 @@ const SignIn = () => {
           sessionStorage.setItem("token", tokenString);
           sessionStorage.setItem("userId", id);
           alert("로그인 성공");
-          alert(tokenString);
           navigate("/");
         } else {
           alert("로그인 실패");
