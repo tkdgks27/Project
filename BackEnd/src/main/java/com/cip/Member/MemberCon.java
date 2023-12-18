@@ -68,17 +68,16 @@ public class MemberCon {
 	
 	@PostMapping(value="/login.do",
 				produces="application/json; charset=utf-8")
-	public boolean loginDo(ResMemberDTO resm, HttpServletResponse res) {
+	public ResponseEntity<ResMemberDTO> loginDo(ResMemberDTO resm, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		boolean result = mDAO.login(resm);
-		mDAO.generateKey();
-		JwtToken jwt = mDAO.makeMemberJWT(resm);
-		ResMemberDTO parse = mDAO.parseJWT(jwt);
-		System.out.println(parse);
-		System.out.println(jwt);
-		System.out.println(result);
-		return result;
+		if(mDAO.login(resm)) {
+			mDAO.generateKey();
+			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
+			ResMemberDTO parse = mDAO.parseJWT(token);
+			return ResponseEntity.ok(parse);
+		}
+		return null;
 	}
 	
 	@PostMapping(value="/parse.JWT",

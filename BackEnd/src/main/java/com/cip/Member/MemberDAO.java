@@ -30,7 +30,6 @@ public class MemberDAO {
 	@Autowired
 	private JavaMailSender jms;
 	
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 	private String key;
 	private String subject = "요청하신 인증번호입니다";
 	private String emailCode;
@@ -93,6 +92,11 @@ public class MemberDAO {
 		key = uuid.toString();
 	}
 	
+	public ResMemberDTO getInfo(ResMemberDTO resm) {
+		List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
+	        return result.get(0);
+	}
+	
 	public JwtToken makeMemberJWT(ResMemberDTO resm) {
 		Date now = new Date();
 		long tokenExpiration= now.getTime() + Duration.ofSeconds(20).toMillis();
@@ -125,7 +129,7 @@ public class MemberDAO {
 			Integer num = (Integer) c.get("num");
 			String id = (String) c.get("id");
 			String pw = (String) c.get("pw");
-			Date birth = (Date) c.get("birth");
+			Date birth = new Date((long) c.get("birth"));
 			String email = (String) c.get("email");
 			String address = (String) c.get("address");
 			String admin = (String) c.get("admin");
@@ -142,9 +146,6 @@ public class MemberDAO {
 	
 	public boolean login(ResMemberDTO resm) {
 		List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
-		
-		
-		System.out.println(result);
 		if (result != null && !result.isEmpty()) {
 			ResMemberDTO user = result.get(0);
 			if(resm.getPw().equals(user.getPw())) {
