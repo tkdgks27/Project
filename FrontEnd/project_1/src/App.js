@@ -8,6 +8,7 @@ import NaverLogin from './signin/naverlogin';
 import FindId from './signin/findid';
 import MemberList from './user/membercheck';
 import UserInfo from './user/UserInfo';
+import GoInfo from './user/goInfo';
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/find" element={<FindId />} />
         <Route path="/member" element={<MemberList />} />
         <Route path="/info" element={<UserInfo />} />
+        <Route path="/ginfo" element={<GoInfo />} />
       </Routes>
     </Router>
   );
