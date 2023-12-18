@@ -4,30 +4,27 @@ import React, { useEffect, useState } from 'react';
 const UserInfo = () => {
   const [userData, setUserData] = useState(null);
   const token = sessionStorage.getItem("token");
-  // const userId = sessionStorage.getItem('userId');
-  // const headers = {
-  //   Authorization: `Bearer ${token}`,
-  // };
 
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
-  const [admin, setAd] = useState("");
+  const [admin, setAdmin] = useState("");
 
 
   const connectionCheck = () => {
-    const memberInfo = {
-      id: id,
-      pw: pw,
-      email: email,
-      address: address,
-    } ;
-    // new FormData();
-    // memberInfo.append("id", id);
-    // memberInfo.append("pw", pw);
-    // memberInfo.append("email", email);
-    // memberInfo.append("address", address);
+    const memberInfo = new FormData();
+    memberInfo.append("admin", admin);
+    memberInfo.append("id", id);
+    memberInfo.append("pw", pw);
+    memberInfo.append("email", email);
+    memberInfo.append("address", address);
+    // const memberInfo = {
+    //   id: id,
+    //   pw: pw,
+    //   email: email,
+    //   address: address,
+    // } ;
     // memberInfo.append("admin", admin);
 
     
@@ -35,26 +32,50 @@ const UserInfo = () => {
       .post("http://localhost:3001/parse.JWT", memberInfo, {
         withCredentials: true,
         headers:{
-          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
         },
+        // payloads:{
+        // }
       })
       .then((res) => {
-        console.log("토큰 검증 성공", setUserData);
-        setUserData(memberInfo);
-        // alert(userData); 
-        // // alert(userId);
-        // alert(token);
-        // alert(res);
+        console.log("토큰 검증 성공", res.data);
+        alert(memberInfo.get(admin));
+        // alert(res.data.id);
+        // alert(res.data.pw);
+        // alert(res.data.email);
+        // alert(res.data.address);
+
       })
       .catch((error) => {
         console.error('토큰 검증 중 오류 발생:', error);
+        // alert(setUserData(id));
+        // alert(setUserData(pw));
+        // alert(setUserData(email));
+        // alert(setUserData(address));
+        // alert(sessionStorage.getItem("token"));
+        // alert(setUserData);
+        // alert(memberInfo);
       });
-  };
+    };
 
-  useEffect(() => {
-    connectionCheck();
-  }, []); // 컴포넌트 마운트 시 한 번만 실행
-
+    
+    useEffect(() => {
+      connectionCheck();
+    }, []);
+    
+    // const showInfo = () => {
+    //   axios.post("http://localhost:3001/parse.JWT", {token: token},{
+    //     withCredentials:true,
+    //     headers:{
+    //       "Content-Type": "application/json",
+    //       "Authorization": `Bearer ${token}`,
+    //     },
+    //   })
+    //   .then((res) => {
+    //     alert(JSON.stringify(res.data))
+    //   }) 
+    // }
   const containerStyle = {
     backgroundColor: "#17171e",
     display: "flex",
@@ -117,7 +138,7 @@ const UserInfo = () => {
 
   return (
     <div style={containerStyle}>
-      {/* <button onClick={connectionCheck}>aaa</button> */}
+      <button onClick={connectionCheck}>aaa</button>
       {userData ? (
         <>
         <form style={formStyle}>

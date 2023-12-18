@@ -74,19 +74,22 @@ public class MemberCon {
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		if(mDAO.login(resm)) {
 			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
-			ResMemberDTO parse = mDAO.parseJWT(token);
+//			ResMemberDTO parse = mDAO.parseJWT(token);
+			System.out.println(mDAO.getInfo(resm));
 			return token;
 		}
 		return null;
 	}
 	
-//	@CrossOrigin(origins = "http://loginocalhost:3000", methods = {RequestMethod.POST, RequestMethod.OPTIONS}, allowCredentials = "true")
+//	@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 	@PostMapping(value="/parse.JWT",
 			produces="application/json; charset=utf-8")
 	public ResMemberDTO jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
+		System.out.println(mjwt);
+		System.out.println(token);
 		return token;
 	}
 	
