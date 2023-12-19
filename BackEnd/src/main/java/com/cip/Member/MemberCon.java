@@ -96,19 +96,18 @@ public class MemberCon {
 		String pwInfo = parse.getPw();
 		String emailInfo = parse.getEmail();
 		String addInfo = parse.getAddress();
-		if(parse != null) {
+		
 		if(!pwInfo.equals(resm.getPw())) {
-			resm.setPw(pwInfo);
+			parse.setPw(resm.getPw());
 		}
 		if(!emailInfo.equals(resm.getEmail())) {
-			resm.setEmail(emailInfo);
+			parse.setEmail(resm.getEmail());
 		}
 		if(!addInfo.equals(resm.getAddress())) {
-			resm.setAddress(addInfo);
+			parse.setAddress(resm.getAddress());
 		}
-		return jpa.save(resm);
-		}
-		return null;
+		return jpa.save(parse);
+		
 	}
 	
 	

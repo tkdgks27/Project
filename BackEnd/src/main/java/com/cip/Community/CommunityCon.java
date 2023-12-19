@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,19 +18,18 @@ import jakarta.servlet.http.HttpServletResponse;
 public class CommunityCon {
 	@Autowired
 	CommunityJPA cJPA;
+	@Autowired
 	CommunityDAO cDAO;
+	@Autowired
 	MemberDAO mDAO;
 	
 	
 	@PostMapping(value="/write.do",
 			produces="application/json; charset=utf-8")
-	public CommunityDTO post(JwtToken mjwt, CommunityDTO cDTO, MultipartFile mf, HttpServletResponse res) {
+	public CommunityDTO post(@RequestParam JwtToken mjwt, CommunityDTO cDTO, MultipartFile mf, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		cDAO.post(mjwt, cDTO, mf);
-		System.out.println(mjwt);
-		System.out.println(cDTO);
-		System.out.println(mf);
 		return cJPA.save(cDTO);
 	}
 	
@@ -52,6 +52,12 @@ public class CommunityCon {
 	public List<CommunityDTO> rewrite(JwtToken mjwt, CommunityDTO cDTO, HttpServletResponse res){
 		
 		return cJPA.findByNum(cDTO.getNum());
+	}
+	
+	@GetMapping(value="/page.count",
+				produces="application/json; charset=utf-8")
+	public List<CommunityDTO> pageCount(JwtToken mjwt, HttpServletResponse res){
+		return cJPA.findByNum(null);
 	}
 	
 		

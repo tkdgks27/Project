@@ -20,11 +20,19 @@ CREATE TABLE pro_community(
 	FOREIGN key(pro_id) REFERENCES pro_member(pro_id)
 );
 
+ALTER TABLE pro_community
+RENAME COLUMN pro_date TO com_date;
+
+
+SELECT com_num, com_id, com_title, com_date
+FROM pro_member, PRO_COMMUNITY
+WHERE pro_id = com_id LIKE %%
+ORDER BY com_date DESC ;
 
 
 CREATE SEQUENCE pro_one_community_seq;
 
-SELECT * FROM pro_member;
+SELECT * FROM PRO_MEMBER;
 
 INSERT INTO pro_member values(pro_one_member_seq.nextval, 'tkdgks27', 'qaz1!', 'tkdgks27@naver.com', TO_date('1998-04-08', 'YYYY-MM-DD'), '수성구', '1');
 
