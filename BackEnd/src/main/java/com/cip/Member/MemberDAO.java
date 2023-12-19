@@ -99,7 +99,7 @@ public class MemberDAO {
 	
 	public JwtToken makeMemberJWT(ResMemberDTO resm) {
 		Date now = new Date();
-		long tokenExpiration= now.getTime() + Duration.ofSeconds(20).toMillis();
+		long tokenExpiration= now.getTime() + Duration.ofSeconds(2000).toMillis();
 		String token = null;
 		try {
 			token= Jwts.builder()
