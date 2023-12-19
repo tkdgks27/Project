@@ -8,7 +8,6 @@ import NaverLogin from './signin/naverlogin';
 import FindId from './signin/findid';
 import MemberList from './user/membercheck';
 import UserInfo from './user/UserInfo';
-<<<<<<< HEAD
 import MyPage from './mainmenu/MyPage';
 import BoardList from './mainmenu/BoardLists';
 import QnA from './mainmenu/Q&A';
@@ -19,9 +18,7 @@ import Privacy from './mainmenu/Privacy';
 import AD from './mainmenu/AD';
 import LogOut from './mainmenu/LogOut';
 import Boardwrite from './mainmenu/Boardwrite';
-=======
 import GoInfo from './user/goInfo';
->>>>>>> 7fb954f9de45a3fdcf6c57dea8b3c24af0a84f28
 
 
 function App() {
@@ -36,7 +33,6 @@ function App() {
         <Route path="/find" element={<FindId />} />
         <Route path="/member" element={<MemberList />} />
         <Route path="/info" element={<UserInfo />} />
-<<<<<<< HEAD
         <Route path="/mypage" element={<MyPage/>}/>
         <Route path="/board" element={<BoardList/>}/>
         <Route path="/boardwrite" element={<Boardwrite/>}/>
@@ -47,9 +43,7 @@ function App() {
         <Route path="/privacy" element={<Privacy/>}/>
         <Route path="/ad" element={<AD/>}/>
         <Route path="/logout" element={<LogOut/>}/>
-=======
         <Route path="/ginfo" element={<GoInfo />} />
->>>>>>> 7fb954f9de45a3fdcf6c57dea8b3c24af0a84f28
       </Routes>
     </Router>
   );
