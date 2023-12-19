@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,25 +69,28 @@ public class MemberCon {
 	
 	@PostMapping(value="/login.do",
 				produces="application/json; charset=utf-8")
-	public ResponseEntity<ResMemberDTO> loginDo(ResMemberDTO resm, HttpServletResponse res) {
+	public JwtToken loginDo(ResMemberDTO resm, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		if(mDAO.login(resm)) {
-			mDAO.generateKey();
 			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
-			ResMemberDTO parse = mDAO.parseJWT(token);
-			return ResponseEntity.ok(parse);
+//			ResMemberDTO parse = mDAO.parseJWT(token);
+			System.out.println(mDAO.getInfo(resm));
+			return token;
 		}
 		return null;
 	}
 	
+//	@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 	@PostMapping(value="/parse.JWT",
 			produces="application/json; charset=utf-8")
-	public ResponseEntity<ResMemberDTO> jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
-		res.addHeader("Access-Control-Allow-Origin", "localhost:3000");
+	public ResMemberDTO jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		ResMemberDTO parse = mDAO.parseJWT(mjwt);
-		return ResponseEntity.ok(parse);
+		ResMemberDTO token = mDAO.parseJWT(mjwt);
+		System.out.println(mjwt);
+		System.out.println(token);
+		return token;
 	}
 	
 	
