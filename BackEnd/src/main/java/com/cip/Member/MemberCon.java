@@ -60,34 +60,57 @@ public class MemberCon {
 	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		System.out.println(resm.getNum());
-		System.out.println(mDAO.getKey());
 		ResMemberDTO savedMember = jpa.save(resm);
 		return ResponseEntity.ok(savedMember);
 	}
 	
 	@PostMapping(value="/login.do",
 				produces="application/json; charset=utf-8")
-	public ResponseEntity<ResMemberDTO> loginDo(ResMemberDTO resm, HttpServletResponse res) {
+	public JwtToken loginDo(ResMemberDTO resm, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		if(mDAO.login(resm)) {
-			mDAO.generateKey();
 			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
-			ResMemberDTO parse = mDAO.parseJWT(token);
-			return ResponseEntity.ok(parse);
+			return token;
+		}
+		return null;
+	}
+	@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
+	@PostMapping(value="/parse.JWT",
+			produces="application/json; charset=utf-8")
+	public ResMemberDTO jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
+//		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+//		res.addHeader("Access-Control-Allow-Credentials", "true");
+		ResMemberDTO token = mDAO.parseJWT(mjwt);
+		if(token != null) {
+			return token;
+		}
+		return null;
+		
+	}
+	
+	@PostMapping(value="/member.update",
+				 produces="application/json; charset=utf-8")
+	public ResMemberDTO memberUpdate(ResMemberDTO resm, JwtToken mjwt, HttpServletResponse res) {
+		ResMemberDTO parse = mDAO.parseJWT(mjwt);
+		String pwInfo = parse.getPw();
+		String emailInfo = parse.getEmail();
+		String addInfo = parse.getAddress();
+		if(parse != null) {
+		if(!pwInfo.equals(resm.getPw())) {
+			resm.setPw(pwInfo);
+		}
+		if(!emailInfo.equals(resm.getEmail())) {
+			resm.setEmail(emailInfo);
+		}
+		if(!addInfo.equals(resm.getAddress())) {
+			resm.setAddress(addInfo);
+		}
+		return jpa.save(resm);
 		}
 		return null;
 	}
 	
-	@PostMapping(value="/parse.JWT",
-			produces="application/json; charset=utf-8")
-	public ResponseEntity<ResMemberDTO> jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
-		res.addHeader("Access-Control-Allow-Origin", "localhost:3000");
-		res.addHeader("Access-Control-Allow-Credentials", "true");
-		ResMemberDTO parse = mDAO.parseJWT(mjwt);
-		return ResponseEntity.ok(parse);
-	}
 	
 	
 

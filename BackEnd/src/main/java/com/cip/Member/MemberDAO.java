@@ -30,7 +30,7 @@ public class MemberDAO {
 	@Autowired
 	private JavaMailSender jms;
 	
-	private String key;
+	private static final String key = "123451234512345123451234512345123";
 	private String subject = "요청하신 인증번호입니다";
 	private String emailCode;
 	
@@ -86,24 +86,20 @@ public class MemberDAO {
 	}
 	
 	
-//	2
-	public void generateKey() {
-		UUID uuid = UUID.randomUUID();
-		key = uuid.toString();
-	}
-	
 	public ResMemberDTO getInfo(ResMemberDTO resm) {
 		List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
 	        return result.get(0);
 	}
 	
 	public JwtToken makeMemberJWT(ResMemberDTO resm) {
+		
+		
 		Date now = new Date();
-		long tokenExpiration= now.getTime() + Duration.ofSeconds(20).toMillis();
+		long tokenExpiration= now.getTime() + Duration.ofSeconds(100).toMillis();
 		String token = null;
 		try {
 			token= Jwts.builder()
-					.signWith(Keys.hmacShaKeyFor(getKey().getBytes("utf-8")))
+					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
 					.expiration(new Date(tokenExpiration))
 					.claim("num", resm.getNum())
 					.claim("id", resm.getId())
@@ -111,6 +107,7 @@ public class MemberDAO {
 					.claim("birth", resm.getBirth())
 					.claim("email", resm.getEmail())
 					.claim("address", resm.getAddress())
+					.claim("admin", resm.getAdmin())
 					.compact();
 			return new JwtToken(token);
 		} catch (Exception e) {
@@ -119,11 +116,11 @@ public class MemberDAO {
 		}
 	}
 	
-	public ResMemberDTO parseJWT(JwtToken mtoken) {
+	public ResMemberDTO parseJWT(JwtToken mjwt) {
 		try {
-			String token = mtoken.getToken();
+			String token = mjwt.getToken();
 			JwtParser jp = Jwts.parser()
-					.verifyWith(Keys.hmacShaKeyFor(getKey().getBytes("utf-8")))
+					.verifyWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
 					.build();
 			Claims c = jp.parseSignedClaims(token).getPayload();
 			Integer num = (Integer) c.get("num");
