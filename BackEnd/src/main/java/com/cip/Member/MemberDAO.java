@@ -86,20 +86,16 @@ public class MemberDAO {
 	}
 	
 	
-//	2
-	public void generateKey() {
-		UUID uuid = UUID.randomUUID();
-//		key = uuid.toString();
-	}
-	
 	public ResMemberDTO getInfo(ResMemberDTO resm) {
 		List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
 	        return result.get(0);
 	}
 	
 	public JwtToken makeMemberJWT(ResMemberDTO resm) {
+		
+		
 		Date now = new Date();
-		long tokenExpiration= now.getTime() + Duration.ofSeconds(2000).toMillis();
+		long tokenExpiration= now.getTime() + Duration.ofSeconds(100).toMillis();
 		String token = null;
 		try {
 			token= Jwts.builder()
@@ -120,9 +116,9 @@ public class MemberDAO {
 		}
 	}
 	
-	public ResMemberDTO parseJWT(JwtToken mtoken) {
+	public ResMemberDTO parseJWT(JwtToken mjwt) {
 		try {
-			String token = mtoken.getToken();
+			String token = mjwt.getToken();
 			JwtParser jp = Jwts.parser()
 					.verifyWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
 					.build();

@@ -7,10 +7,24 @@ CREATE TABLE pro_member(
 	pro_address varchar2(400 char) NOT NULL,
 	pro_admin varchar2(10 char)
 );
+alter TABLE PRO_MEMBER 
+MODIFY COLUMN 
 
-CREATE SEQUENCE pro_one_member_seq;
+CREATE TABLE pro_community(
+	pro_num NUMBER(7) PRIMARY KEY,
+	pro_id varchar2(20 char) UNIQUE,
+	pro_title varchar2(100 char) NOT NULL,
+	pro_subject varchar2(1000 char) NOT NULL,
+	pro_file varchar2(2000 char),
+	pro_date DATE NOT NULL,
+	FOREIGN key(pro_id) REFERENCES pro_member(pro_id)
+);
 
-SELECT * FROM PRO_MEMBER pm;
+
+
+CREATE SEQUENCE pro_one_community_seq;
+
+SELECT * FROM pro_member;
 
 INSERT INTO pro_member values(pro_one_member_seq.nextval, 'tkdgks27', 'qaz1!', 'tkdgks27@naver.com', TO_date('1998-04-08', 'YYYY-MM-DD'), '수성구', '1');
 
@@ -33,7 +47,7 @@ CREATE TABLE pro_banishedemail(
 CREATE TABLE bord_field(
 	
 );
-DROP TABLE PRO_member;
+DROP TABLE pro_checkEmail;
 
 CREATE TABLE pro_banishedmail(
 	pro_email varchar2(200) PRIMARY KEY

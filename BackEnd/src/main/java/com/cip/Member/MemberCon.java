@@ -55,14 +55,12 @@ public class MemberCon {
 		return mDAO.checkCode(verificationCode);
 	}
 	
-	@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")	
+	
 	@PostMapping(value="/join.do",
 				 produces="application/json; charset=utf-8")
 	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, HttpServletResponse res) {
-//		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-//		res.addHeader("Access-Control-Allow-Credentials", "true");
-		System.out.println(resm.getNum());
-		System.out.println(mDAO.getKey());
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO savedMember = jpa.save(resm);
 		return ResponseEntity.ok(savedMember);
 	}
@@ -74,24 +72,46 @@ public class MemberCon {
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		if(mDAO.login(resm)) {
 			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
-//			ResMemberDTO parse = mDAO.parseJWT(token);
-			System.out.println(mDAO.getInfo(resm));
 			return token;
 		}
 		return null;
 	}
-	
-	@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+	@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 	@PostMapping(value="/parse.JWT",
 			produces="application/json; charset=utf-8")
 	public ResMemberDTO jwtParse(@RequestBody JwtToken mjwt, HttpServletResponse res) {
 //		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 //		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
-		System.out.println(mjwt);
-		System.out.println(token);
-		return token;
+		if(token != null) {
+			return token;
+		}
+		return null;
+		
 	}
+	
+	@PostMapping(value="/member.update",
+				 produces="application/json; charset=utf-8")
+	public ResMemberDTO memberUpdate(ResMemberDTO resm, JwtToken mjwt, HttpServletResponse res) {
+		ResMemberDTO parse = mDAO.parseJWT(mjwt);
+		String pwInfo = parse.getPw();
+		String emailInfo = parse.getEmail();
+		String addInfo = parse.getAddress();
+		if(parse != null) {
+		if(!pwInfo.equals(resm.getPw())) {
+			resm.setPw(pwInfo);
+		}
+		if(!emailInfo.equals(resm.getEmail())) {
+			resm.setEmail(emailInfo);
+		}
+		if(!addInfo.equals(resm.getAddress())) {
+			resm.setAddress(addInfo);
+		}
+		return jpa.save(resm);
+		}
+		return null;
+	}
+	
 	
 	
 
