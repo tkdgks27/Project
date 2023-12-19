@@ -19,6 +19,7 @@ import AD from './mainmenu/AD';
 import LogOut from './mainmenu/LogOut';
 import Boardwrite from './mainmenu/Boardwrite';
 import GoInfo from './user/goInfo';
+import BoardDetail from './mainmenu/BoardDetail';
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path="/mypage" element={<MyPage/>}/>
         <Route path="/board" element={<BoardList/>}/>
         <Route path="/boardwrite" element={<Boardwrite/>}/>
+        <Route path="/board/:idx" element={<BoardDetail/>}/>
         <Route path="/qna" element={<QnA/>}/>
         <Route path="/suggestions" element={<Suggestion/>}/>
         <Route path="/notice" element={<Notice/>}/>
