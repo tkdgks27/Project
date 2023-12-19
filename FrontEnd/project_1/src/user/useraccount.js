@@ -234,6 +234,8 @@ const Useraccount = () => {
     justifyContent: "center",
     alignItems: "center",
     minHeight: "100vh",
+    paddingTop: 90,
+    paddingBottom: 50,
   };
 
   const formStyle = {

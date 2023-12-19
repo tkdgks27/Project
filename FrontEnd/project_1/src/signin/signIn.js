@@ -100,6 +100,8 @@ const SignIn = () => {
     alignItems: "center",
     justifyContent: "center",
     minHeight: "100vh",
+    paddingTop: 30,
+    paddingBottom: 10,
   };
 
   const formStyle = {
