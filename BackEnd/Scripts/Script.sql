@@ -29,6 +29,14 @@ CREATE TABLE pro_comment(
 	ON DELETE cascade
 );
 
+CREATE TABLE pro_jwttoken(
+	tok_id varchar2(20 char) PRIMARY key,
+	tok_access varchar2(1000 char) UNIQUE,
+	tok_refresh varchar2(1000 char) UNIQUE,
+	FOREIGN key(tok_id) REFERENCES pro_member(pro_id)
+	ON DELETE cascade
+);
+
 ALTER TABLE pro_community
 drop COLUMN com_comment ;
 
@@ -44,7 +52,7 @@ ORDER BY com_date DESC ;
 
 CREATE SEQUENCE pro_one_community_seq;
 
-SELECT * FROM PRO_COMMUNITY ;
+SELECT * FROM pro_jwttoken ;
 
 INSERT INTO pro_member values(pro_one_member_seq.nextval, 'tkdgks27', 'qaz1!', 'tkdgks27@naver.com', TO_date('1998-04-08', 'YYYY-MM-DD'), '수성구', '1');
 

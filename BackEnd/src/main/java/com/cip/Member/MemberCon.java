@@ -25,8 +25,6 @@ public class MemberCon {
 	private MemberDAO mDAO;
 	@Autowired
 	private JPA jpa;
-	@Autowired
-	private CommunityJPA cjpa;
 	// 아이디체크
 	@PostMapping(value="/check.id",
 			produces="application/json; charset=utf-8")

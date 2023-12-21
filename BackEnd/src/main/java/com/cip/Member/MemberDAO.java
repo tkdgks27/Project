@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.hibernate.boot.model.internal.MapKeyColumnDelegator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerProperties.Token;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -110,6 +111,32 @@ public class MemberDAO {
 					.claim("admin", resm.getAdmin())
 					.compact();
 			return new JwtToken(token);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+public JwtToken makeAccessJWT(ResMemberDTO resm) {
+		
+		
+		Date now = new Date();
+		long tokenExpiration= now.getTime() + Duration.ofSeconds(100).toMillis();
+		String token = null;
+		String refreshtoken = null; // 유효기간 긴 토큰
+		try {
+			token= Jwts.builder()
+					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
+					.expiration(new Date(tokenExpiration))
+					.claim("num", resm.getNum())
+					.claim("id", resm.getId())
+					.claim("pw", resm.getPw())
+					.claim("birth", resm.getBirth())
+					.claim("email", resm.getEmail())
+					.claim("address", resm.getAddress())
+					.claim("admin", resm.getAdmin())
+					.compact();
+			return new JwtToken(resm.getId(), token, refreshtoken);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

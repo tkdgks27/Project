@@ -3,18 +3,19 @@ package com.cip.Community;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cip.Member.JPA;
 import com.cip.Member.JwtToken;
 import com.cip.Member.MemberDAO;
 import com.cip.Member.ResMemberDTO;
 
 import jakarta.servlet.http.HttpServletResponse;
-
 @RestController
 public class CommunityCon {
 	@Autowired

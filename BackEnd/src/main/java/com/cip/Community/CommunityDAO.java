@@ -41,7 +41,7 @@ public class CommunityDAO {
 		if(token != null) {
 		cDTO.setId(token.getId());
 		try {
-			if(mf != null) {
+			if(mf != null && !mf.isEmpty()) {
 			String fileName = mf.getOriginalFilename();
 			String type = fileName.substring(fileName.lastIndexOf("."));
 			String uuid = UUID.randomUUID().toString();
@@ -59,7 +59,7 @@ public class CommunityDAO {
 			cDTO.setDate(sdf.parse(sdf.format(new Date())));
 			
 		} catch (ParseException e) {
-			e.printStackTrace();
+			System.out.println("날짜 파싱 오류");
 		}
 		return cjpa.save(cDTO);
 		

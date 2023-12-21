@@ -20,6 +20,7 @@ public class JwtToken {
 	@Id
 	@SequenceGenerator(sequenceName = "pro_seq", name = "nps", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator= "nps")
-	@Column(name="pro_token")
-	private String token;
+	@Column(name="tok_id")
+	private String id;
+	
 }

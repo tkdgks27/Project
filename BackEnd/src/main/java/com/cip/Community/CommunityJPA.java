@@ -3,7 +3,9 @@ package com.cip.Community;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 @Repository
