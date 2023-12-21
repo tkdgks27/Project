@@ -30,11 +30,11 @@ public class CommunityCon {
 	public CommunityDTO post(@RequestParam JwtToken mjwt, CommunityDTO cDTO, MultipartFile mf, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		cDAO.post(mjwt, cDTO, mf);
-		return cJPA.save(cDTO);
+		
+		return cDAO.post(mjwt, cDTO, mf);
 	}
 	
-	// 삭제하기
+	// 글 삭제
 	@PostMapping(value="/post.delete", 
 				 produces="application/json; charset=utf-8")
 	public List<CommunityDTO> postDelete(JwtToken mjwt, CommunityDTO cDTO, HttpServletResponse res) {
@@ -69,7 +69,7 @@ public class CommunityCon {
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
 		if(token.getId().equals(cDTO.getId())) {
-			return cJPA.save(cJPA.findById(cDTO.getId()));
+			return cJPA.save(cJPA.findByNum(cDTO.getNum()));
 		}
 		
 		return null;

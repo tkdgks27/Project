@@ -76,7 +76,7 @@ public class MemberCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO parse = mDAO.parseJWT(mjwt);
-		jpa.deleteByNumLike(parse.getNum());
+		jpa.deleteByIdLike(parse.getId());
 	}
 	// 로그인
 	@PostMapping(value="/login.do",
