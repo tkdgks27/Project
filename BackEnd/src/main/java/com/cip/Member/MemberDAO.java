@@ -1,5 +1,6 @@
 package com.cip.Member;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
@@ -8,9 +9,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-import org.hibernate.boot.model.internal.MapKeyColumnDelegator;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerProperties.Token;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -22,8 +24,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 @Service
 public class MemberDAO {
 	@Autowired
@@ -31,17 +31,27 @@ public class MemberDAO {
 	@Autowired
 	private JavaMailSender jms;
 	
-	private static final String key = "123451234512345123451234512345123";
 	private String subject = "요청하신 인증번호입니다";
 	private String emailCode;
-	
+	private String encodeKey;
 	
 	public String getEmailCode() {
 			return emailCode;
 	}
-	public String getKey() {
-		return key;
-	}
+	
+	public void KeyGeneration() {
+        try {
+            String algorithm = "HMACSHA256";
+            KeyGenerator keyGenerator = KeyGenerator.getInstance(algorithm);
+            
+            SecretKey secretKey = keyGenerator.generateKey();
+            
+            encodeKey = java.util.Base64.getEncoder().encodeToString(secretKey.getEncoded());
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
 	
 //	1
 	public boolean checkID(String id) {
@@ -100,7 +110,7 @@ public class MemberDAO {
 		String token = null;
 		try {
 			token= Jwts.builder()
-					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
+					.signWith(Keys.hmacShaKeyFor(encodeKey.getBytes("utf-8")))
 					.expiration(new Date(tokenExpiration))
 					.claim("num", resm.getNum())
 					.claim("id", resm.getId())
@@ -117,37 +127,36 @@ public class MemberDAO {
 		}
 	}
 	
-public JwtToken makeAccessJWT(ResMemberDTO resm) {
-		
-		
-		Date now = new Date();
-		long tokenExpiration= now.getTime() + Duration.ofSeconds(100).toMillis();
-		String token = null;
-		String refreshtoken = null; // 유효기간 긴 토큰
-		try {
-			token= Jwts.builder()
-					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
-					.expiration(new Date(tokenExpiration))
-					.claim("num", resm.getNum())
-					.claim("id", resm.getId())
-					.claim("pw", resm.getPw())
-					.claim("birth", resm.getBirth())
-					.claim("email", resm.getEmail())
-					.claim("address", resm.getAddress())
-					.claim("admin", resm.getAdmin())
-					.compact();
-			return new JwtToken(resm.getId(), token, refreshtoken);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+//public JwtToken makeAccessJWT(ResMemberDTO resm) {
+//		
+//		
+//		Date now = new Date();
+//		long tokenExpiration= now.getTime() + Duration.ofSeconds(100).toMillis();
+//		String refreshtoken = null; // 유효기간 긴 토큰
+//		try {
+//			token= Jwts.builder()
+//					.signWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
+//					.expiration(new Date(tokenExpiration))
+//					.claim("num", resm.getNum())
+//					.claim("id", resm.getId())
+//					.claim("pw", resm.getPw())
+//					.claim("birth", resm.getBirth())
+//					.claim("email", resm.getEmail())
+//					.claim("address", resm.getAddress())
+//					.claim("admin", resm.getAdmin())
+//					.compact();
+//			return new JwtToken(resm.getId(), token, refreshtoken);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return null;
+//		}
+//	}
 	
 	public ResMemberDTO parseJWT(JwtToken mjwt) {
 		try {
 			String token = mjwt.getToken();
 			JwtParser jp = Jwts.parser()
-					.verifyWith(Keys.hmacShaKeyFor(key.getBytes("utf-8")))
+					.verifyWith(Keys.hmacShaKeyFor(encodeKey.getBytes("utf-8")))
 					.build();
 			Claims c = jp.parseSignedClaims(token).getPayload();
 			Integer num = (Integer) c.get("num");
@@ -163,17 +172,13 @@ public JwtToken makeAccessJWT(ResMemberDTO resm) {
 			return null;
 		}
 	}
-//	3
-//	 public boolean validateToken(String token) {
-//	        
-//	    }
 	
+//	3
 	public boolean login(ResMemberDTO resm) {
 		List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
 		if (result != null && !result.isEmpty()) {
 			ResMemberDTO user = result.get(0);
 			if(resm.getPw().equals(user.getPw())) {
-				
 				return true;
 			}
 		}

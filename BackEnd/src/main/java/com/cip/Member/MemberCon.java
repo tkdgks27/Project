@@ -83,11 +83,27 @@ public class MemberCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		if(mDAO.login(resm)) {
+			mDAO.KeyGeneration();
 			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
+			System.out.println(token);
+			System.out.println(mDAO.parseJWT(token));
 			return token;
 		}
 		return null;
 	}
+	// 토큰 단순갱신
+	@PostMapping(value="/token.refresh",
+				 produces="application/json; charset=utf-8")
+	public JwtToken loginDo(JwtToken mjwt, HttpServletResponse res) {
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.addHeader("Access-Control-Allow-Credentials", "true");
+		ResMemberDTO token = mDAO.parseJWT(mjwt);
+		if(token != null) {
+			return mDAO.makeMemberJWT(token);
+		}
+		return null;
+	}
+	
 	// 토큰해석
 	@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 	@PostMapping(value="/parse.JWT",

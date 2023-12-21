@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,7 +29,7 @@ public class CommunityCon {
 	// 글쓰기
 	@PostMapping(value="/write.do",
 			produces="application/json; charset=utf-8")
-	public CommunityDTO post(@RequestParam JwtToken mjwt, CommunityDTO cDTO, MultipartFile mf, HttpServletResponse res) {
+	public CommunityDTO post(@RequestBody JwtToken mjwt, CommunityDTO cDTO, MultipartFile mf, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		
