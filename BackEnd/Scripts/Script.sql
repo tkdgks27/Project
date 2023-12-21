@@ -7,6 +7,8 @@ CREATE TABLE pro_member(
 	pro_address varchar2(400 char) NOT NULL,
 	pro_admin varchar2(10 char)
 );
+alter TABLE PRO_MEMBER 
+MODIFY COLUMN 
 
 CREATE TABLE pro_community(
 	com_num NUMBER(7) PRIMARY KEY,
@@ -37,17 +39,6 @@ CREATE TABLE pro_jwttoken(
 	ON DELETE cascade
 );
 
-ALTER TABLE pro_community
-drop COLUMN com_comment ;
-
-ALTER TABLE pro_community
-RENAME COLUMN pro_date TO com_date;
-
-
-SELECT com_num, com_id, com_title, com_date
-FROM pro_member, PRO_COMMUNITY
-WHERE pro_id = com_id LIKE %%
-ORDER BY com_date DESC ;
 
 
 CREATE SEQUENCE pro_one_community_seq;
