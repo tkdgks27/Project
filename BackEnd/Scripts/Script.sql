@@ -7,8 +7,9 @@ CREATE TABLE pro_member(
 	pro_address varchar2(400 char) NOT NULL,
 	pro_admin varchar2(10 char)
 );
-alter TABLE PRO_MEMBER 
-MODIFY COLUMN 
+ALTER TABLE pro_member
+MODIFY pro_pw varchar2(2000 char);
+SELECT * FROM pro_community;
 
 CREATE TABLE pro_community(
 	com_num NUMBER(7) PRIMARY KEY,
@@ -38,18 +39,37 @@ CREATE TABLE pro_jwttoken(
 	FOREIGN key(tok_id) REFERENCES pro_member(pro_id)
 	ON DELETE cascade
 );
+CREATE TABLE pro_dataroom(
+	data_num number(3) PRIMARY KEY,
+	data_id varchar2(20 char) NOT NULL,
+	data_file varchar2(2000 char) NOT NULL
+);
+
+CREATE TABLE pro_jwttoken(
+	pro_id PRIMARY KEY,
+	pro_token varchar2(500 char) UNIQUE,
+	pro_refreshtoken varchar2(500 char) UNIQUE,
+	FOREIGN KEY (pro_id) REFERENCES pro_member(pro_id)
+	ON DELETE cascade
+);
+
+ALTER TABLE pro_community
+RENAME COLUMN pro_date TO com_date;
 
 
+SELECT com_num, com_id, com_title, com_date
+FROM pro_member, PRO_COMMUNITY
+WHERE pro_id = com_id LIKE %%
+ORDER BY com_date DESC ;
 
-CREATE SEQUENCE pro_one_community_seq;
 
-SELECT * FROM pro_jwttoken ;
+CREATE SEQUENCE pro_one_dataroom_seq;
+
+SELECT * FROM pro_member;
 
 INSERT INTO pro_member values(pro_one_member_seq.nextval, 'tkdgks27', 'qaz1!', 'tkdgks27@naver.com', TO_date('1998-04-08', 'YYYY-MM-DD'), '수성구', '1');
 
-CREATE TABLE pro_jwttoken(
-	pro_token varchar2(500 char) NOT null
-);
+
 
 ALTER TABLE pro_member
 ADD pro_admin varchar2(40 char);
@@ -66,7 +86,7 @@ CREATE TABLE pro_banishedemail(
 CREATE TABLE bord_field(
 	
 );
-DROP TABLE pro_checkEmail;
+DROP TABLE pro_dataroom;
 
 CREATE TABLE pro_banishedmail(
 	pro_email varchar2(200) PRIMARY KEY

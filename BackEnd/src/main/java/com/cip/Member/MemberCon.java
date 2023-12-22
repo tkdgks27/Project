@@ -44,6 +44,7 @@ public class MemberCon {
 		if(emailAuth) {
 			mDAO.makeCode();
 			mDAO.sendCode(resm);
+			
 			return emailAuth;
 		}
 		return emailAuth;
@@ -55,6 +56,7 @@ public class MemberCon {
 	public boolean codeCheck(@RequestParam("verificationCode") String verificationCode, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
+		
 		return mDAO.checkCode(verificationCode);
 	}
 	
@@ -64,6 +66,8 @@ public class MemberCon {
 	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
+//		resm.setPw(mDAO.secureP);
+		resm.setPw(mDAO.encodeBcrypt(resm));
 		ResMemberDTO savedMember = jpa.save(resm);
 		return ResponseEntity.ok(savedMember);
 	}
@@ -82,15 +86,14 @@ public class MemberCon {
 	public JwtToken loginDo(ResMemberDTO resm, HttpServletResponse res) {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
-		if(mDAO.login(resm)) {
+		if(mDAO.matchesBcrypt(resm)) {
 			mDAO.KeyGeneration();
 			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
-			System.out.println(token);
-			System.out.println(mDAO.parseJWT(token));
 			return token;
 		}
 		return null;
 	}
+
 	// 토큰 단순갱신
 	@PostMapping(value="/token.refresh",
 				 produces="application/json; charset=utf-8")
@@ -139,6 +142,7 @@ public class MemberCon {
 		return jpa.save(parse);
 		
 	}
+	
 	
 	
 	

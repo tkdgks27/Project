@@ -15,6 +15,7 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -53,6 +54,8 @@ public class MemberDAO {
         }
     }
 	
+	
+	
 //	1
 	public boolean checkID(String id) {
 	    List<ResMemberDTO> result = jpa.findByIdLike(id);
@@ -81,6 +84,7 @@ public class MemberDAO {
 			sb.append(randomKey);
 		}
 		emailCode = sb.toString();
+		System.out.println(emailCode);
 	}
 	
 	public synchronized void sendCode(ResMemberDTO resm) {
@@ -90,6 +94,7 @@ public class MemberDAO {
 			mmh.setTo(resm.getEmail());
 			mmh.setSubject(subject);
 			mmh.setText(emailCode);
+			
 			jms.send(mm);
 		} catch (MessagingException e) {
 			e.printStackTrace();
@@ -126,6 +131,7 @@ public class MemberDAO {
 			return null;
 		}
 	}
+	
 	
 //public JwtToken makeAccessJWT(ResMemberDTO resm) {
 //		
@@ -185,5 +191,19 @@ public class MemberDAO {
 		return false;
 		
 	}
+	
+	public String secureP(ResMemberDTO resm) {
+		
+		return resm;
+	}
+	public String encodeBcrypt(ResMemberDTO resm) {
+		  return new BCryptPasswordEncoder().encode(resm.getPw());
+		}
+	public boolean matchesBcrypt(ResMemberDTO resm) {
+		  List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
+		  ResMemberDTO user = result.get(0);
+		  BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		  return passwordEncoder.matches(resm.getPw(), user.getPw());
+		}
 	
 }
