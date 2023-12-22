@@ -20,21 +20,24 @@ public class CommunityDTO {
 	@Id
 	@SequenceGenerator(sequenceName="pro_one_community_seq", name="pocs", allocationSize = 1)
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "pocs")
-	@Column(name="pro_num")
+	@Column(name="com_num")
 	private Integer num;
 	
-	@Column(name="pro_id")
+	@Column(name="com_id")
 	private String id;
 	
-	@Column(name="pro_title")
+	@Column(name="com_title")
 	private String title;
 	
-	@Column(name="pro_subject")
+	@Column(name="com_subject")
 	private String subject;
 	
-	@Column(name="pro_file")
+	@Column(name="com_file")
 	private String file;
 	
-	@Column(name="pro_date")
+	@Column(name="com_date")
 	private Date date;
+	
+	@Column(name="com_comment")
+	private String comment;
 }

@@ -25,7 +25,7 @@ public class CommunityDAO {
 	@Autowired
 	CommunityJPA cjpa;
 	@Autowired
-	MemberDAO mdao;
+	MemberDAO mDAO;
 	private SimpleDateFormat sdf;
 	
 	@Value("${cip.folder.path}")
@@ -37,11 +37,11 @@ public class CommunityDAO {
 	
 	
 	public CommunityDTO post(JwtToken mjwt,CommunityDTO cDTO, MultipartFile mf) {
-		ResMemberDTO token = mdao.parseJWT(mjwt);
+		ResMemberDTO token = mDAO.parseJWT(mjwt);
 		if(token != null) {
 		cDTO.setId(token.getId());
 		try {
-			if(mf != null) {
+			if(mf != null && !mf.isEmpty()) {
 			String fileName = mf.getOriginalFilename();
 			String type = fileName.substring(fileName.lastIndexOf("."));
 			String uuid = UUID.randomUUID().toString();
@@ -57,9 +57,10 @@ public class CommunityDAO {
 			}
 			
 			cDTO.setDate(sdf.parse(sdf.format(new Date())));
+			cDTO.setId(mDAO.parseJWT(mjwt).getId());
 			
 		} catch (ParseException e) {
-			e.printStackTrace();
+			System.out.println("날짜 파싱 오류");
 		}
 		return cjpa.save(cDTO);
 		
