@@ -20,13 +20,14 @@ import LogOut from './mainmenu/LogOut';
 import Boardwrite from './mainmenu/Boardwrite';
 import GoInfo from './user/goInfo';
 import BoardDetail from './mainmenu/BoardDetail';
+import NewBoard from './mainmenu/newBoard';
 
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Main />} />
+      <Route path="/" element={<Main />} />
         <Route path="/gallery" element={<FileUpload />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/user" element={<Useraccount />} />
@@ -36,8 +37,8 @@ function App() {
         <Route path="/info" element={<UserInfo />} />
         <Route path="/mypage" element={<MyPage/>}/>
         <Route path="/board" element={<BoardList/>}/>
-        <Route path="/boardwrite" element={<Boardwrite/>}/>
-        <Route path="/board/:idx" element={<BoardDetail/>}/>
+        {/* <Route path="/boardwrite" element={<Boardwrite/>}/> */}
+        <Route path="/board" element={<BoardDetail/>}/>
         <Route path="/qna" element={<QnA/>}/>
         <Route path="/suggestions" element={<Suggestion/>}/>
         <Route path="/notice" element={<Notice/>}/>
@@ -46,6 +47,10 @@ function App() {
         <Route path="/ad" element={<AD/>}/>
         <Route path="/logout" element={<LogOut/>}/>
         <Route path="/ginfo" element={<GoInfo />} />
+        {/* <Route path="/admin" element={<AdminLogin />} /> */}
+        {/* <Route path="/boardwrite" element={<NewBoard />} /> */}
+        {/* <Route path="/admin" element={<AdminPage />} /> */}
+        <Route path="/2board" element={<NewBoard />} />
       </Routes>
     </Router>
   );

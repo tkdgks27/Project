@@ -96,7 +96,7 @@ const Main = () => {
       <br />
       dfdkajlk
       <br></br>
-      <Link to="/signin" style={loginButtonStyle}>
+      {/* <Link to="/signin" style={loginButtonStyle}>
         <button>로그인</button>
       </Link>
       <br />
@@ -107,7 +107,7 @@ const Main = () => {
       <Link to='/logout' style={logoutButtonStyle}>
         <button>로그아웃</button>
       </Link>
-      <br />
+      <br /> */}
     </div>
   );
 };
