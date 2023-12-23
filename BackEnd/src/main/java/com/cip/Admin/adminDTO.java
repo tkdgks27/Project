@@ -1,7 +1,5 @@
 package com.cip.Admin;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,17 +12,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity(name="pro_dataroom")
-public class DataRoomDTO {
+@Entity(name="pro_banishedemail")
+public class adminDTO {
+	
 	@Id
-	@SequenceGenerator(sequenceName="pro_one_dataroom_seq", name="pods", allocationSize = 1)
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "pods")
-	@Column(name="data_num")
-	private String num;
-	
-	@Column(name="data_id")
-	private String id;
-	
-	@Column(name="data_file")
-	private Date file;
+	@SequenceGenerator(sequenceName = "pro_one_banishedemail_seq", name = "pobs", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator= "pobs")
+	@Column(name="pro_email", insertable = false, updatable = false)
+	private String email;
 }

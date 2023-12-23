@@ -2,22 +2,22 @@ package com.cip.Member;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
-import java.util.UUID;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cip.Admin.adminDTO;
+import com.cip.Admin.AdminJPA;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
@@ -31,6 +31,7 @@ public class MemberDAO {
 	JPA jpa;
 	@Autowired
 	private JavaMailSender jms;
+	
 	
 	private String subject = "요청하신 인증번호입니다";
 	private String emailCode;
@@ -84,7 +85,6 @@ public class MemberDAO {
 			sb.append(randomKey);
 		}
 		emailCode = sb.toString();
-		System.out.println(emailCode);
 	}
 	
 	public synchronized void sendCode(ResMemberDTO resm) {
@@ -180,19 +180,6 @@ public class MemberDAO {
 	}
 	
 //	3
-	public boolean login(ResMemberDTO resm) {
-		List<ResMemberDTO> result = jpa.findByIdLike(resm.getId());
-		if (result != null && !result.isEmpty()) {
-			ResMemberDTO user = result.get(0);
-			if(resm.getPw().equals(user.getPw())) {
-				return true;
-			}
-		}
-		return false;
-		
-	}
-	
-	
 	public String encodeBcrypt(ResMemberDTO resm) {
 		  return new BCryptPasswordEncoder().encode(resm.getPw());
 		}

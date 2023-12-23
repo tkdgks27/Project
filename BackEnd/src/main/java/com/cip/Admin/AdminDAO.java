@@ -14,6 +14,8 @@ public class AdminDAO {
 	MemberDAO mDAO;
 	@Autowired
 	JPA jpa;
+	@Autowired
+	AdminJPA ajpa;
 	
 	public void ban(JwtToken mjwt, ResMemberDTO resm) {
 		ResMemberDTO token = mDAO.parseJWT(mjwt);

@@ -57,7 +57,7 @@ public class CommunityDAO {
 			}
 			
 			cDTO.setDate(sdf.parse(sdf.format(new Date())));
-			cDTO.setId(mDAO.parseJWT(mjwt).getId());
+			cDTO.setId(token.getId());
 			
 		} catch (ParseException e) {
 			System.out.println("날짜 파싱 오류");
