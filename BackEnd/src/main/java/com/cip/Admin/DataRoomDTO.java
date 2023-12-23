@@ -26,5 +26,5 @@ public class DataRoomDTO {
 	private String id;
 	
 	@Column(name="data_file")
-	private Date file;
+	private String file;
 }

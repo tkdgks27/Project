@@ -20,6 +20,8 @@ public class AdminCon {
 	MemberDAO mDAO;
 	@Autowired
 	DataRoom dr;
+	@Autowired
+	DataRoomJPA djpa;
 	
 	// 유저 강퇴
 	@PostMapping(value="/banished.do",
@@ -38,12 +40,14 @@ public class AdminCon {
 	
 	@PostMapping(value="/data.upload",
 				 produces = "application/json; charset=utf-8")
-	public ResponseEntity<String> upload(JwtToken mjwt, MultipartFile mf ,int chunkNumber, int totalChunks ,HttpServletResponse res) {
+	public ResponseEntity<DataRoomDTO> upload(JwtToken mjwt, DataRoomDTO dDTO , MultipartFile mf ,int chunkNumber, int totalChunks ,HttpServletResponse res) {
 		ResMemberDTO parse = mDAO.parseJWT(mjwt);
+		dDTO.setId(parse.getId());
+		dDTO.setFile(dr.getPath() + mf.getOriginalFilename());
 		if(!parse.getAdmin().isEmpty()) {
 			boolean uploadDone = dr.uploadFile(mf, chunkNumber, totalChunks);
 			
-			return uploadDone? ResponseEntity.ok("success") : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build();
+			return uploadDone? ResponseEntity.ok(djpa.save(dDTO)) : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build();
 		}
 		return null;
 	}

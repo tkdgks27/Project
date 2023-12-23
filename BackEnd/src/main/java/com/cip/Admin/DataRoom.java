@@ -22,6 +22,10 @@ public class DataRoom {
 	@Value("${seperate.folder.path}")
 	private String seperateData;
 	
+	public String getPath() {
+		return seperateData;
+	}
+	
 //	public void uploadData(DataRoomDTO dDTO, MultipartFile mf, File f) {
 //		try {
 //			String fileName = mf.getOriginalFilename();
