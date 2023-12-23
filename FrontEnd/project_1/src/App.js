@@ -48,7 +48,7 @@ function App() {
         <Route path="/logout" element={<LogOut/>}/>
         <Route path="/ginfo" element={<GoInfo />} />
         {/* <Route path="/admin" element={<AdminLogin />} /> */}
-        {/* <Route path="/boardwrite" element={<NewBoard />} /> */}
+        <Route path="/boardwrite" element={<NewBoard />} /> */}
         {/* <Route path="/admin" element={<AdminPage />} /> */}
         <Route path="/2board" element={<NewBoard />} />
       </Routes>

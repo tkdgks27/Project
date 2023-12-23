@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // title subject file 넣을 수 있게
 
@@ -18,6 +19,7 @@ import React, { useEffect, useRef, useState } from "react";
 // 백엔드에서 글 번호 붙이고
 
 const NewBoard = () => {
+  const navigate = useNavigate();
   const token = sessionStorage.getItem("token");
   // const token = tokenString ? JSON.parse(tokenString) : null;
   // const token = sessionStorage.getItem("token");
@@ -112,18 +114,22 @@ const saveBoard = () => {
     connectionCheck();
   }, []);
 
-  const containerStyle = {
+  const backToList = () => {
+    navigate("/board");
+  }
+
+  const bodyStyle = {
     backgroundColor: "#17171e",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     minHeight: "100vh",
-    paddingTop: 90,
-    paddingBottom: 50,
+    paddingTop: 70,
+    paddingBottom: 0,
   };
 
   const formStyle = {
-    width: "400px",
+    width: "1000px",
     padding: "20px",
     border: "2px solid #fff",
     borderRadius: "10px",
@@ -174,43 +180,57 @@ const saveBoard = () => {
     whiteSpace: "nowrap",
   };
 
+  const detailstyle = {
+    width: "1000px",
+    height: "500px",
+};
+
   return (
-    <div style={containerStyle}>
-      <label style={labelStyle}>
-        제목:
+    <div style={bodyStyle}>
+      <div style={formStyle}>
+        <label style={labelStyle}>
+          제목:
+            <input
+            value={title}
+            name="title"
+            type="text"
+            onChange={(e) => {
+              setTitle(e.target.value);
+              }}
+            />
+        </label>
+        <label style={labelStyle}>
+          내용
+          <textarea
+            style={detailstyle}
+            value={subject}
+            name="subject"
+            cols="30"
+            rows="10"
+            type="text"
+            onChange={(e) => {
+              setSubject(e.target.value);
+            }}
+          />
+        </label>
+        <label>File: </label>
         <input
-          value={title}
-          name="title"
-          type="text"
+          type="file"
           onChange={(e) => {
-            setTitle(e.target.value);
+            setFile(e.target.files[0]);
           }}
-        />
-      </label>
-
-      <label style={labelStyle}>
-        내용
-        <input
-          value={subject}
-          name="subject"
-          type="text"
-          onChange={(e) => {
-            setSubject(e.target.value);
-          }}
-        />
-      </label>
-
-      <label>File: </label>
-      <input
-        type="file"
-        onChange={(e) => {
-          setFile(e.target.files[0]);
-        }}
-      />
-
-      <button style={buttonStyle} onClick={saveBoard}>
-        게시
-      </button>
+          />
+        <p />
+        <br />
+          <div>
+            <button style={buttonStyle} onClick={saveBoard}>
+              게시
+            </button>
+            <button style={buttonStyle} onClick={backToList}>
+              취소
+            </button>
+          </div>
+        </div>
     </div>
   );
 };

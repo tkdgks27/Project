@@ -22,7 +22,7 @@ const BoardList = () => {
   };
 
   const MoveToWrite = () => {
-    navigate('/boardwrite');
+    navigate('/2board');
   };
 
   useEffect(() => {
