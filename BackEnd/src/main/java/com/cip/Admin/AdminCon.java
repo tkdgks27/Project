@@ -1,5 +1,7 @@
 package com.cip.Admin;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -54,18 +57,24 @@ public class AdminCon {
 	}
 	
 	// 데이터업로드
+//	@PostMapping(value="/data.upload",
+//				 produces = "application/json; charset=utf-8")
+//	public ResponseEntity<DataRoomDTO> upload( JwtToken mjwt, DataRoomDTO dDTO , MultipartFile mf ,int chunkNumber, int totalChunks ,HttpServletResponse res) {
+//		ResMemberDTO parse = mDAO.parseJWT(mjwt);
+//		dDTO.setId(parse.getId());
+//		dDTO.setFile(dr.getPath() + mf.getOriginalFilename());
+//		if(!parse.getAdmin().isEmpty()) {
+//			boolean uploadDone = dr.uploadFile(mf, chunkNumber, totalChunks);
+//			return uploadDone? ResponseEntity.ok(djpa.save(dDTO)) : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build();
+//		}
+//		return null;
+//	}
 	@PostMapping(value="/data.upload",
-				 produces = "application/json; charset=utf-8")
-	public ResponseEntity<DataRoomDTO> upload(JwtToken mjwt, DataRoomDTO dDTO , MultipartFile mf ,int chunkNumber, int totalChunks ,HttpServletResponse res) {
-		ResMemberDTO parse = mDAO.parseJWT(mjwt);
-		dDTO.setId(parse.getId());
-		dDTO.setFile(dr.getPath() + mf.getOriginalFilename());
-		if(!parse.getAdmin().isEmpty()) {
-			boolean uploadDone = dr.uploadFile(mf, chunkNumber, totalChunks);
-			
-			return uploadDone? ResponseEntity.ok(djpa.save(dDTO)) : ResponseEntity.status(HttpStatus.PARTIAL_CONTENT).build();
-		}
-		return null;
+			produces = "application/json; charset=utf-8")
+	public void upload( JwtToken mjwt,@RequestParam("file") MultipartFile mf , FileDTO fDTO ,HttpServletResponse res) {
+		System.out.println(dr.uploadFile(mf, fDTO.getChunkNumber(), fDTO.getTotalChunks()));
+		System.out.println(mf);
+		System.out.println(mjwt);
 	}
 	@GetMapping("/data/{file}")
 	public ResponseEntity<Resource> getData(@PathVariable("file") String f){

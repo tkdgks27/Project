@@ -28,21 +28,6 @@ public class DataRoom {
 		return seperateData;
 	}
 	
-//	public void uploadData(DataRoomDTO dDTO, MultipartFile mf, File f) {
-//		try {
-//			String fileName = mf.getOriginalFilename();
-//			String type = fileName.substring(fileName.lastIndexOf("."));
-//			String uuid = UUID.randomUUID().toString();
-//			fileName = fileName + uuid + type;
-//			mf.transferTo(new File(dataRoom + File.separator + fileName));
-//		} catch (IllegalStateException e) {
-//			System.out.println("파일을 넣어주세요");
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			System.out.println("파일 형식이 잘못되었습니다");
-//			e.printStackTrace();
-//		}
-//	}
 	// 파일 분할업로드
 	public synchronized boolean uploadFile(MultipartFile mf,
 											int chunkNumber, int totalChunks) {

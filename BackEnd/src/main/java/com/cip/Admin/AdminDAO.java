@@ -26,6 +26,16 @@ public class AdminDAO {
 		}
 		
 	}
+	// 회원등급조절
+	public void gradeControll(JwtToken mjwt, ResMemberDTO resm) {
+		ResMemberDTO token = mDAO.parseJWT(mjwt);
+		if(token.getAdmin() != null) {
+			resm.getId();
+			resm.setAdmin("2");
+			jpa.save(resm);
+			
+		}
+	}
 	
 	
 }
