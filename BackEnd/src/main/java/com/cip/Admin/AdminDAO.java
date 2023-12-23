@@ -20,15 +20,12 @@ public class AdminDAO {
 	public void ban(JwtToken mjwt, ResMemberDTO resm) {
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
 		if(token.getAdmin() != null) {
+			
 			jpa.deleteByEmailLike(resm.getEmail());
+			ajpa.save(resm.getEmail());
 		}
 		
 	}
-	public void adminBan(JwtToken mjwt, ResMemberDTO resm) {
-		ResMemberDTO token = mDAO.parseJWT(mjwt);
-		if(token.getAdmin().equals("1")) {
-			
-		}
-	}
+	
 	
 }

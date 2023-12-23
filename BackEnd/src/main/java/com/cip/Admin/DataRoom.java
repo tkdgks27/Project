@@ -2,15 +2,17 @@ package com.cip.Admin;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -70,7 +72,16 @@ public class DataRoom {
 		return false;
 	}
 	
-//	public Resource getFile(String fileName) {
-//		return new UrlResource("file:" + dataRoom + File.separator + fileName)
-//	}
+	public ResponseEntity<Resource> getFile(String fileName) {
+		
+		try {
+			UrlResource ur = new UrlResource(dataRoom + File.separator + fileName);
+			String h = "attachment; filename=\"" + URLEncoder.encode(fileName, "utf-8") + "\"";
+			return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, h).body(ur);
+		} catch (Exception e) {
+			System.out.println("파일다운 실패");
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

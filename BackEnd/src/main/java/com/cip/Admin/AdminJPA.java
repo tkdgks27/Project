@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service;
 @Repository
 public interface AdminJPA extends CrudRepository<adminDTO, String>{
 	public abstract List<adminDTO> findByEmail(String s);
+
+	public abstract List<adminDTO> save(String email);
 }
