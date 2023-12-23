@@ -20,6 +20,7 @@ import LogOut from './mainmenu/LogOut';
 import GoInfo from './user/goInfo';
 import BoardDetail from './mainmenu/BoardDetail';
 import NewBoard from './mainmenu/newBoard';
+import DataRoom from './mainmenu/DataRoom';
 
 
 function App() {
@@ -46,9 +47,10 @@ function App() {
         <Route path="/logout" element={<LogOut/>}/>
         <Route path="/ginfo" element={<GoInfo />} />
         {/* <Route path="/admin" element={<AdminLogin />} /> */}
-        <Route path="/boardwrite" element={<NewBoard />} /> */}
+        <Route path="/boardwrite" element={<NewBoard />} />
         {/* <Route path="/admin" element={<AdminPage />} /> */}
         <Route path="/2board" element={<NewBoard />} />
+        <Route path="/dataroom" element={<DataRoom />} />
       </Routes>
     </Router>
   );

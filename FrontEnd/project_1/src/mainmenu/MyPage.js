@@ -5,6 +5,23 @@ const MyPage = () => {
   const [userData, setUserData] = useState(null);
   const token = sessionStorage.getItem("token");
 
+  const isLoggedIn = () => {
+    const token = sessionStorage.getItem("token");
+    return !!token;
+  };
+
+  const showLoginAlert = () => {
+    alert("로그인한 상태가 아닙니다. 로그인하세요.")
+  }
+
+  useEffect(() => {
+    if (!isLoggedIn()) {
+      showLoginAlert();
+    } else{
+      connectionCheck();
+    }
+  })
+
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
   const [email, setEmail] = useState("");

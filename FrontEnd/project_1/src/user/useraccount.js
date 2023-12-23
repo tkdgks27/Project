@@ -195,7 +195,6 @@ const Useraccount = () => {
       .then((res) => {
         if (res.data) {
           alert("인증 성공!");
-          alert(res.data);
         } else {
           alert("인증 코드가 일치하지 않습니다.");
         }

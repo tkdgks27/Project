@@ -29,6 +29,10 @@ const Header = () => {
                         건의사항
                     </a>
                     &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <a href="/dataroom" className="dtrds">
+                        DataRoom
+                    </a>
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
                 </div>
                 <div className="mypagebx">
                     &nbsp;&nbsp;|&nbsp;&nbsp;
