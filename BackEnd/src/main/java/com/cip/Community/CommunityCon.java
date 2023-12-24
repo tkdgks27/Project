@@ -3,15 +3,12 @@ package com.cip.Community;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.cip.Member.JPA;
 import com.cip.Member.JwtToken;
 import com.cip.Member.MemberDAO;
 import com.cip.Member.ResMemberDTO;
@@ -43,7 +40,7 @@ public class CommunityCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
-		
+//		글쓴사람의 아이디와 현재사용자의 아이디가 같으면 삭제
 		if(token.getId().equals(cDTO.getId())) {
 			return cJPA.deleteByNum(cDTO.getNum());
 		}
@@ -57,6 +54,7 @@ public class CommunityCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
+//		글쓴사람의 아이디와 현재사용자의 아이디가 같으면 수정창으로		
 		if(token.getId().equals(cDTO.getId())) {
 			
 			return true;
@@ -70,27 +68,22 @@ public class CommunityCon {
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
-		if(token.getId().equals(cDTO.getId())) {
+//		토큰이 유효하면 글 저장
+		if(token != null) {
 			return cJPA.save(cJPA.findByNum(cDTO.getNum()));
 		}
 		
 		return null;
 	}
 	
-	// 전체페이지 표시
-	@GetMapping(value="/page.count",
-				produces="application/json; charset=utf-8")
-	public List<CommunityDTO> pageCount(JwtToken mjwt, HttpServletResponse res){
-		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-		res.addHeader("Access-Control-Allow-Credentials", "true");
-
-		return cJPA.findByDateAcs();
-	}
-	
+//	게시판 메인페이지
 	@GetMapping(value="post.get",
 			  	produces="application/json; charset=utf-8")
 	public void getPost(JwtToken mjwt, HttpServletResponse res) {
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.addHeader("Access-Control-Allow-Credentials", "true");
 		
+		cDAO.getPost();
 	}
 		
 	

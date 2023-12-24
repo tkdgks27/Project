@@ -1,7 +1,5 @@
 package com.cip.Admin;
 
-import java.util.Date;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,5 +24,5 @@ public class DataRoomDTO {
 	private String id;
 	
 	@Column(name="data_file")
-	private Date file;
+	private String file;
 }

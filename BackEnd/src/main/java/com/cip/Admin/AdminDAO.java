@@ -17,18 +17,26 @@ public class AdminDAO {
 	@Autowired
 	AdminJPA ajpa;
 	
+//	유저차단
 	public void ban(JwtToken mjwt, ResMemberDTO resm) {
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
 		if(token.getAdmin() != null) {
+			
 			jpa.deleteByEmailLike(resm.getEmail());
+			ajpa.save(resm.getEmail());
 		}
 		
 	}
-	public void adminBan(JwtToken mjwt, ResMemberDTO resm) {
+//	 회원등급조절
+	public void gradeControll(JwtToken mjwt, ResMemberDTO resm) {
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
-		if(token.getAdmin().equals("1")) {
+		if(token.getAdmin() != null) {
+			resm.getId();
+			resm.setAdmin("2");
+			jpa.save(resm);
 			
 		}
 	}
+	
 	
 }
