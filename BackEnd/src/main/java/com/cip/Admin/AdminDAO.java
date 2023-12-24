@@ -17,6 +17,7 @@ public class AdminDAO {
 	@Autowired
 	AdminJPA ajpa;
 	
+//	유저차단
 	public void ban(JwtToken mjwt, ResMemberDTO resm) {
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
 		if(token.getAdmin() != null) {
@@ -26,7 +27,7 @@ public class AdminDAO {
 		}
 		
 	}
-	// 회원등급조절
+//	 회원등급조절
 	public void gradeControll(JwtToken mjwt, ResMemberDTO resm) {
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
 		if(token.getAdmin() != null) {

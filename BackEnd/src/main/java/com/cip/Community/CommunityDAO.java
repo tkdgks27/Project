@@ -1,15 +1,17 @@
 package com.cip.Community;
 
+import java.awt.print.Pageable;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.chrono.JapaneseChronology;
 import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,7 +37,7 @@ public class CommunityDAO {
 		sdf = new SimpleDateFormat("yyyyMMddHHmm");
 	}
 	
-	
+//	게시판 글쓰기
 	public CommunityDTO post(JwtToken mjwt,CommunityDTO cDTO, MultipartFile mf) {
 		ResMemberDTO token = mDAO.parseJWT(mjwt);
 		if(token != null) {
@@ -66,6 +68,14 @@ public class CommunityDAO {
 		
 		}
 		return null;
+	}
+	
+//	게시판 메인페이지
+	public void getPost() {
+		Sort s = Sort.by(Sort.Order.asc("date"), Sort.Order.asc("title"));
+		Pageable p = (Pageable) PageRequest.of(0, 5, s);
+		
+		cjpa.findByTitleContaining("", p);
 	}
 	
 }

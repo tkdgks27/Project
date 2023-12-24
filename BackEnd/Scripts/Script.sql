@@ -9,9 +9,15 @@ CREATE TABLE pro_member(
 );
 DROP TABLE pro_member;
 
+DELETE FROM pro_member
+WHERE pro_id = 'a';
+DELETE FROM pro_jwttoken
+WHERE tok_id = 'tkdgks275';
+
 UPDATE pro_member SET pro_admin='1' WHERE pro_id = 'tkdgks27';
 
-SELECT * FROM PRO_MEMBER;
+SELECT * FROM pro_member;
+SELECT * FROM jwttoken;
 
 CREATE TABLE pro_community(
 	com_num NUMBER(7) PRIMARY KEY,
@@ -33,16 +39,23 @@ CREATE TABLE pro_comment(
 	FOREIGN KEY (com_id) REFERENCES pro_member(pro_id)
 	ON DELETE cascade
 );
-DROP TABLE pro_comment;
+DROP TABLE pro_jwttoken;
 
-CREATE TABLE pro_jwttoken(
-	tok_id varchar2(20 char) PRIMARY key,
-	tok_access varchar2(1000 char) UNIQUE,
-	tok_refresh varchar2(1000 char) UNIQUE,
-	FOREIGN key(tok_id) REFERENCES pro_member(pro_id)
+CREATE TABLE jwttoken(
+	id varchar2(20 char) PRIMARY KEY,
+	accesss varchar2(1000 char) UNIQUE,
+	refresh varchar2(1000 char) UNIQUE,
+	FOREIGN key(id) REFERENCES pro_member(pro_id)
 	ON DELETE cascade
 );
+UPDATE pro_jwttoken
+SET tok_refresh = NULL
+WHERE tok_id = 'tkdgks275';
+
 DROP TABLE pro_jwttoken;
+
+DELETE FROM pro_jwttoken
+WHERE tok_id = 'tkdgks27';
 
 CREATE TABLE pro_dataroom(
 	data_num number(3) PRIMARY KEY,
@@ -62,7 +75,7 @@ WHERE pro_id = com_id LIKE %%
 ORDER BY com_date DESC ;
 
 
-CREATE SEQUENCE pro_one_banishedemail_seq;
+CREATE SEQUENCE pro_one_jwttoken_seq;
 
 SELECT * FROM pro_banishedemail;
 
@@ -76,6 +89,7 @@ ADD pro_admin varchar2(40 char);
 CREATE TABLE pro_checkEmail(
 	pro_cEmail varchar2(200 char) NOT null
 );
+
 SELECT  * FROM pro_checkEmail;
 
 CREATE TABLE pro_banishedemail(

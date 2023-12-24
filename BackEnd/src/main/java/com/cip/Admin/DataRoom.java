@@ -27,6 +27,8 @@ public class DataRoom {
 	public String getPath() {
 		return seperateData;
 	}
+	@Value("${cip.folder.path}")
+	private String folderpath;
 	
 	// 파일 분할업로드
 	public synchronized boolean uploadFile(MultipartFile mf,
@@ -57,8 +59,8 @@ public class DataRoom {
 		return false;
 	}
 	
+//	파일다운
 	public ResponseEntity<Resource> getFile(String fileName) {
-		
 		try {
 			UrlResource ur = new UrlResource(dataRoom + File.separator + fileName);
 			String h = "attachment; filename=\"" + URLEncoder.encode(fileName, "utf-8") + "\"";

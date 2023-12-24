@@ -1,22 +1,12 @@
 package com.cip.Member;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.cip.Admin.AdminJPA;
-import com.cip.Community.CommunityJPA;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -26,6 +16,50 @@ public class MemberCon {
 	private MemberDAO mDAO;
 	@Autowired
 	private JPA jpa;
+	
+	// 로그인
+	@PostMapping(value="/login.do",
+			produces="application/json; charset=utf-8")
+	public JwtToken loginDo(ResMemberDTO resm, saveJWT sjwt ,HttpServletResponse res) {
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.addHeader("Access-Control-Allow-Credentials", "true");
+		
+		if(mDAO.matchesBcrypt(resm)) {
+			mDAO.KeyGeneration();
+			JwtToken mjwt = mDAO.makeMemberJWT(mDAO.getInfo(resm));
+			
+			if(mDAO.getRefreshByResm(resm)==null) {
+				mDAO.RefreshKeyGeneration();
+				refreshToken rjwt = mDAO.makeRefreshJWT(resm);
+//				토큰 db 저장
+				mDAO.saveToken(sjwt, resm, mjwt, rjwt);
+				return mjwt;
+			}
+			mDAO.upToken(sjwt, resm, mjwt);
+			return mjwt;
+		}
+		return null;
+	}
+	
+	// 회원가입
+	@PostMapping(value="/join.do",
+			produces="application/json; charset=utf-8")
+	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, saveJWT sjwt ,HttpServletResponse res) {
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.addHeader("Access-Control-Allow-Credentials", "true");
+		resm.setPw(mDAO.encodeBcrypt(resm));
+		ResMemberDTO savedMember = jpa.save(resm);
+		
+//		토큰발급
+		mDAO.KeyGeneration();
+		mDAO.RefreshKeyGeneration();
+		JwtToken access = mDAO.makeMemberJWT(resm);
+		refreshToken refresh = mDAO.makeRefreshJWT(resm);
+		mDAO.saveToken(sjwt, resm, access, refresh);
+		
+		return ResponseEntity.ok(savedMember);
+	}
+	
 	// 아이디체크
 	@PostMapping(value="/check.id",
 			produces="application/json; charset=utf-8")
@@ -61,17 +95,6 @@ public class MemberCon {
 		return mDAO.checkCode(verificationCode);
 	}
 	
-	// 회원가입
-	@PostMapping(value="/join.do",
-				 produces="application/json; charset=utf-8")
-	public ResponseEntity<ResMemberDTO> joinDo(ResMemberDTO resm, HttpServletResponse res) {
-		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-		res.addHeader("Access-Control-Allow-Credentials", "true");
-//		resm.setPw(mDAO.secureP);
-		resm.setPw(mDAO.encodeBcrypt(resm));
-		ResMemberDTO savedMember = jpa.save(resm);
-		return ResponseEntity.ok(savedMember);
-	}
 	// 회원탈퇴
 	@PostMapping(value="/join.out",
 				produces="application/json; charset=utf-8")
@@ -81,21 +104,9 @@ public class MemberCon {
 		ResMemberDTO parse = mDAO.parseJWT(mjwt);
 		jpa.deleteByIdLike(parse.getId());
 	}
-	// 로그인
-	@PostMapping(value="/login.do",
-				produces="application/json; charset=utf-8")
-	public JwtToken loginDo(ResMemberDTO resm, HttpServletResponse res) {
-		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-		res.addHeader("Access-Control-Allow-Credentials", "true");
-		if(mDAO.matchesBcrypt(resm)) {
-			mDAO.KeyGeneration();
-			JwtToken token = mDAO.makeMemberJWT(mDAO.getInfo(resm));
-			return token;
-		}
-		return null;
-	}
+	
 
-	// 토큰 단순갱신
+	// 엑세스토큰 단순갱신 (테스트용)
 	@PostMapping(value="/token.refresh",
 				 produces="application/json; charset=utf-8")
 	public JwtToken loginDo(JwtToken mjwt, HttpServletResponse res) {
@@ -108,7 +119,7 @@ public class MemberCon {
 		return null;
 	}
 	
-	// 토큰해석
+	// 엑세스토큰 해석(테스트용)
 	@CrossOrigin(origins = "http://localhost:3000/", allowCredentials = "true")
 	@PostMapping(value="/parse.JWT",
 			produces="application/json; charset=utf-8")
@@ -122,6 +133,7 @@ public class MemberCon {
 		return null;
 		
 	}
+	
 	// 회원정보수정
 	@PostMapping(value="/member.update",
 				 produces="application/json; charset=utf-8")
@@ -131,18 +143,29 @@ public class MemberCon {
 		String emailInfo = parse.getEmail();
 		String addInfo = parse.getAddress();
 		
-		if(!pwInfo.equals(resm.getPw())) {
-			parse.setPw(resm.getPw());
+//		프론트랑 연계되면 넣을 리프레쉬토큰 유효하면 엑세스토큰 발급하기
+//		try {
+//			if(mDAO.getRefreshByResm(resm) != null) {
+			
+				if(!pwInfo.equals(resm.getPw())) {
+					parse.setPw(resm.getPw());
+				}
+				if(!emailInfo.equals(resm.getEmail())) {
+					parse.setEmail(resm.getEmail());
+				}
+				if(!addInfo.equals(resm.getAddress())) {
+					parse.setAddress(resm.getAddress());
+				}
+				return jpa.save(parse);
 		}
-		if(!emailInfo.equals(resm.getEmail())) {
-			parse.setEmail(resm.getEmail());
-		}
-		if(!addInfo.equals(resm.getAddress())) {
-			parse.setAddress(resm.getAddress());
-		}
-		return jpa.save(parse);
-		
-	}
+	
+//			} catch(Exception e) {
+//				System.out.println("토큰 만료");
+//				return null;
+//			}
+//			return null;
+//		}
+	
 	
 	
 	
