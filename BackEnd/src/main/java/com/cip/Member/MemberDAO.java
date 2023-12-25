@@ -31,6 +31,8 @@ public class MemberDAO {
 	private JavaMailSender jms;
 	@Autowired
 	TokenJPA tjpa;
+//	@Autowired
+//	AdminJPA ajpa;
 	
 	
 	private String subject = "요청하신 인증번호입니다";
@@ -48,14 +50,19 @@ public class MemberDAO {
 //	아이디 중복성검사
 	public boolean checkID(String id) {
 	    List<ResMemberDTO> result = jpa.findByIdLike(id);
+	    
 	    return result.isEmpty();
 	}
 	
 //	이메일 중복성 검사
 	public boolean checkEmail(ResMemberDTO resm) {
 		List<ResMemberDTO> result = jpa.findByEmailLike(resm.getEmail());
+//		List<adminDTO> result2 = ajpa.findByEmail(resm.getEmail());
 		if(result.isEmpty()) {
-			return true;
+//		    if (result2.isEmpty()) {
+//		    	return true;
+//			}
+			return true; // result2 정상작동시 false 로 바꿈
 		}
 		return false;
 	}
@@ -103,14 +110,14 @@ public class MemberDAO {
 	public String getRefreshByToken(JwtToken mjwt) {
 		ResMemberDTO parse = parseJWT(mjwt);
 		List<saveJWT> entity = tjpa.findByIdLike(parse.getId());
-		String getrefresh = entity.get(0).getRefreshtoken();
+		String getrefresh = entity.get(0).getRefresh();
 		return getrefresh;
 	}
 	
 //	멤버정보로 리프레쉬토큰 가져오기
 	public String getRefreshByResm(ResMemberDTO resm) {
 		List<saveJWT> entity = tjpa.findByIdLike(resm.getId());
-		String getrefresh = entity.get(0).getRefreshtoken();
+		String getrefresh = entity.get(0).getRefresh();
 		return getrefresh;
 	}
 	
@@ -198,7 +205,7 @@ public refreshToken makeRefreshJWT(ResMemberDTO resm) {
 public saveJWT saveToken(saveJWT sjwt, ResMemberDTO resm, JwtToken mjwt, refreshToken rjwt) {
 	sjwt.setId(resm.getId());
 	sjwt.setAccesss(mjwt.getToken());
-	sjwt.setRefreshtoken(rjwt.getRefreshtoken());
+	sjwt.setRefresh(rjwt.getRefreshtoken());
 	
 	return tjpa.save(sjwt);
 }

@@ -19,5 +19,5 @@ public class saveJWT {
 		private String accesss;
 		
 		@Column(name="refresh")
-		private String refreshtoken;
+		private String refresh;
 }
