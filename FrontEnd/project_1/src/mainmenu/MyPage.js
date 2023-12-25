@@ -1,5 +1,8 @@
 import axios from "axios";
+import classNames from "classnames";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import Btn2 from "../design/Btn2";
 
 const MyPage = () => {
   const [userData, setUserData] = useState(null);
@@ -11,16 +14,16 @@ const MyPage = () => {
   };
 
   const showLoginAlert = () => {
-    alert("로그인한 상태가 아닙니다. 로그인하세요.")
-  }
+    alert("로그인한 상태가 아닙니다. 로그인하세요.");
+  };
 
-  useEffect(() => {
-    if (!isLoggedIn()) {
-      showLoginAlert();
-    } else{
-      connectionCheck();
-    }
-  })
+  // useEffect(() => {
+  //   if (!isLoggedIn()) {
+  //     showLoginAlert();
+  //   } else{
+  //     connectionCheck();
+  //   }
+  // })
 
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
@@ -62,7 +65,9 @@ const MyPage = () => {
         },
       }).open();
     } else {
-      console.error("Daum Postcode script not loaded or Postcode object not available");
+      console.error(
+        "Daum Postcode script not loaded or Postcode object not available"
+      );
     }
   };
 
@@ -167,9 +172,8 @@ const MyPage = () => {
         }
       });
   };
-  
 
-    const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     console.log("아이디:", userData.id);
     console.log("비밀번호:", userData.pw);
@@ -177,17 +181,16 @@ const MyPage = () => {
     console.log("이메일:", userData.email);
     console.log("주소:", userData.address);
   };
-  
+
   const delInfo = () => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem(userData);
     // sessionStorage.removeItem(userData);
     // sessionStorage.removeItem("userData");
-    
-  
+
     // 회원 탈퇴를 서버에 요청
     axios
-      .delete("http://localhost:3001/member.del", {
+      .delete("http://localhost:3001/join.out", {
         params: { id: userData.id },
         withCredentials: true,
         headers: {
@@ -230,6 +233,8 @@ const MyPage = () => {
     justifyContent: "center",
     alignItems: "center",
     minHeight: "100vh",
+    paddingTop: 90,
+    paddingBottom: 10,
   };
 
   const formStyle = {
@@ -272,8 +277,8 @@ const MyPage = () => {
   };
 
   const buttonStyle = {
-    marginTop: "-9px",
-    marginLeft: "5px",
+    marginTop: "-7px",
+    marginLeft: "15px",
     cursor: "pointer",
     backgroundColor: "#3498db",
     color: "#fff",
@@ -288,7 +293,7 @@ const MyPage = () => {
     marginTop: "-7px",
     marginLeft: "340px",
     cursor: "pointer",
-    backgroundColor: "grey",
+    backgroundColor: "black",
     color: "#fff",
     border: "2px solid #fff",
     borderRadius: "5px",
@@ -296,7 +301,16 @@ const MyPage = () => {
     fontSize: "10px",
     whiteSpace: "nowrap",
   };
-  
+
+  const buttonContainerStyle = {
+    display: "flex",
+    alignItems: "center",
+    width: "300px",
+    marginTop: "10px",
+    justifyContent: "space-evenly",
+  };
+
+
   return (
     <div style={containerStyle}>
       {userData ? (
@@ -304,28 +318,28 @@ const MyPage = () => {
           <form onSubmit={handleSubmit} style={formStyle}>
             <p>아이디: {userData.id}</p>
             <br />
-            <p>비밀번호: {userData.pw}</p>
+            <p>비밀번호: ******</p>
             <br />
-            <p>생년월일: {userData.birth}</p>
+            <p>생년월일: {userData.birth && userData.birth.substring(0, 10)}</p>
             <br />
             <label style={labelStyle}>
               <p>이메일: {userData.email}</p>
-              <input
-                type="text"
-                value={email}
-                style={inputStyle}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="새 이메일"
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <input
+                  type="text"
+                  value={email}
+                  style={inputStyle}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="새 이메일"
                 />
+                <button onClick={SendCode} style={buttonStyle}>
+                  코드전송
+                </button>
+              </div>
             </label>
-            <button onClick={SendCode} style={buttonStyle}>
-              코드전송
-            </button>
-            <br />
-            <br />
-            <br />
+
             <label style={labelStyle}>
-              인증코드:                                      
+              <p>인증코드:</p>
               <div style={{ display: "flex", alignItems: "center" }}>
                 <input
                   name="verificationCode"
@@ -335,32 +349,34 @@ const MyPage = () => {
                     setVerificationCode(e.target.value);
                   }}
                   style={inputStyle}
-                  />
+                  placeholder="인증코드"
+                />
                 <button
                   name="check.code"
                   type="button"
                   onClick={codeCheck}
                   style={buttonStyle}
-                  >
+                >
                   코드확인
                 </button>
               </div>
             </label>
-            <br />
             <label style={labelStyle}>
               <p>주소: {userData.address}</p>
-              <input
-                type="text"
-                name="address"
-                value={address}
-                style={inputStyle}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="새 주소"
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <input
+                  type="text"
+                  name="address"
+                  value={address}
+                  style={inputStyle}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="새 주소"
                 />
+                <button style={buttonStyle} onClick={AddressFinder}>
+                  주소찾기
+                </button>
+              </div>
             </label>
-            <button style={buttonStyle} onClick={AddressFinder}>
-              주소찾기
-            </button>
             <p>상세주소: {userData.addressDetail}</p>
             <input
               type="text"
@@ -368,18 +384,32 @@ const MyPage = () => {
               style={inputStyle}
               onChange={(e) => setAddressDetail(e.target.value)}
               placeholder="상세주소"
-              />
+            />
+            <br />
+            <br />
+            <br />
             <button style={confirmStyle} onClick={updateUserInfo}>
               수정 완료
             </button>
-            <button style={confirmStyle} onClick={delInfo}>
+            {/* <button style={confirmStyle} onClick={delInfo}>
               삭제
-            </button>
+            </button> */}
           </form>
         </div>
       ) : (
-        <p>Loading...</p>
-        )}
+        <label style={labelStyle}>
+            <div style={buttonContainerStyle}>
+              <Link to={"/signin"}>
+                <Btn2 classname={classNames("aa", "bb")}>로그인</Btn2>
+              </Link>
+              <Link to={"/"}>
+                <Btn2 classNames={classNames("aa", "bb")}>
+                  홈으로
+                </Btn2>
+              </Link>
+            </div>
+        </label>
+      )}
     </div>
   );
 };
