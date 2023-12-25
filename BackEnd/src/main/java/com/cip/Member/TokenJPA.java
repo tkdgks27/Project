@@ -17,5 +17,11 @@ public interface TokenJPA extends CrudRepository<saveJWT, String>{
 	@Modifying
 	@Query(value = "update jwttoken t set t.accesss = :newAccess where id = :getid and :newAccess != t.accesss")
 	void updateById(@Param("newAccess") String newAccessValue, @Param("getid") String getid);
+	
+    @Transactional
+    @Modifying
+    @Query("UPDATE jwttoken t SET t.refresh = NULL WHERE t.id != :proId")
+    void deleteRefresh(@Param("proId") String proId);
+
 
 }

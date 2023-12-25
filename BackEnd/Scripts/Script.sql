@@ -10,7 +10,7 @@ CREATE TABLE pro_member(
 DROP TABLE pro_member;
 
 DELETE FROM pro_member
-WHERE pro_id = 'a';
+WHERE pro_id = 'tkdgks275';
 DELETE FROM pro_jwttoken
 WHERE tok_id = 'tkdgks275';
 
