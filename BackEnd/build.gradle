@@ -1,11 +1,17 @@
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+	id 'war'
 }
 
 group = 'com.cip'
 version = '0.0.1-SNAPSHOT'
+querydsl {
+    jpa = true
+    querydslSourcesDir = projectDir.path + "/src/main/generated"
+}
 
 java {
 	sourceCompatibility = '17'
@@ -14,6 +20,8 @@ java {
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
+		
+	querydsl.extendsFrom compileClasspath
 	}
 }
 
@@ -30,6 +38,9 @@ dependencies {
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor "jakarta.persistence:jakarta.persistence-api:2.2.3"
+    implementation 'com.querydsl:querydsl-jpa:4.4.0'
+    annotationProcessor 'com.querydsl:querydsl-apt:4.4.0'
 	
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	
@@ -39,6 +50,6 @@ dependencies {
 	
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+tasks.withType(JavaCompile) {
+    options.annotationProcessorPath = configurations.querydsl
 }

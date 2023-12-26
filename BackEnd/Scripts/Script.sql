@@ -11,8 +11,8 @@ DROP TABLE pro_member;
 
 DELETE FROM pro_member
 WHERE pro_id = 'tkdgks275';
-DELETE FROM pro_jwttoken
-WHERE tok_id = 'tkdgks275';
+DELETE FROM 
+WHERE tok_id = 'ryou002';
 
 UPDATE pro_member SET pro_admin='1' WHERE pro_id = 'tkdgks27';
 
