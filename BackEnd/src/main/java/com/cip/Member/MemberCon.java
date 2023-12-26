@@ -137,27 +137,39 @@ public class MemberCon {
 	// 회원정보수정
 	@PostMapping(value="/member.update",
 				 produces="application/json; charset=utf-8")
-	public ResMemberDTO memberUpdate(ResMemberDTO resm, JwtToken mjwt, HttpServletResponse res) {
-		ResMemberDTO parse = mDAO.parseJWT(mjwt);
-		String pwInfo = parse.getPw();
-		String emailInfo = parse.getEmail();
-		String addInfo = parse.getAddress();
+	public JwtToken memberUpdate(ResMemberDTO resm, JwtToken mjwt, HttpServletResponse res) {
+//		ResMemberDTO parse = mDAO.parseJWT(mjwt);
+//		String pwInfo = parse.getPw();
+//		String emailInfo = parse.getEmail();
+//		String addInfo = parse.getAddress();
 		
 //		프론트랑 연계되면 넣을 리프레쉬토큰 유효하면 엑세스토큰 발급하기
 //		try {
 //			if(mDAO.getRefreshByResm(resm) != null) {
 			
-				if(!pwInfo.equals(resm.getPw())) {
-					parse.setPw(resm.getPw());
-				}
-				if(!emailInfo.equals(resm.getEmail())) {
-					parse.setEmail(resm.getEmail());
-				}
-				if(!addInfo.equals(resm.getAddress())) {
-					parse.setAddress(resm.getAddress());
-				}
-				return jpa.save(parse);
+//				if(!pwInfo.equals(resm.getPw())) {
+//					parse.setPw(resm.getPw());
+//				}
+//				if(!emailInfo.equals(resm.getEmail())) {
+//					parse.setEmail(resm.getEmail());
+//				}
+//				if(!addInfo.equals(resm.getAddress())) {
+//					parse.setAddress(resm.getAddress());
+//				}
+//				return jpa.save(parse);
+		if(!resm.getPw().equals(mDAO.getInfo(resm).getPw())) {
+			resm.setPw(resm.getPw());
 		}
+		if(!resm.getPw().equals(mDAO.getInfo(resm).getEmail())) {
+			resm.setEmail(resm.getEmail());
+		}
+		if(!resm.getPw().equals(mDAO.getInfo(resm).getAddress())) {
+			resm.setAddress(resm.getAddress());
+		}
+		resm.setNum(mDAO.getInfo(resm).getNum());
+		jpa.save(resm);
+	return mDAO.makeMemberJWT(resm);
+	}
 	
 //			} catch(Exception e) {
 //				System.out.println("토큰 만료");
