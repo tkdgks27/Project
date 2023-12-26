@@ -1,13 +1,13 @@
 import axios from "axios";
 import classNames from "classnames";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Btn2 from "../design/Btn2";
 
 const MyPage = () => {
   const [userData, setUserData] = useState(null);
   const token = sessionStorage.getItem("token");
-
+  const navigate = useNavigate();
   const isLoggedIn = () => {
     const token = sessionStorage.getItem("token");
     return !!token;
@@ -16,14 +16,6 @@ const MyPage = () => {
   const showLoginAlert = () => {
     alert("로그인한 상태가 아닙니다. 로그인하세요.");
   };
-
-  // useEffect(() => {
-  //   if (!isLoggedIn()) {
-  //     showLoginAlert();
-  //   } else{
-  //     connectionCheck();
-  //   }
-  // })
 
   const [id, setId] = useState("");
   const [pw, setPw] = useState("");
@@ -35,12 +27,32 @@ const MyPage = () => {
   const [verificationCode, setVerificationCode] = useState("");
   const [birth, setBirth] = useState("");
 
+  const connectionCheck = () => {
+    axios
+      .post("http://localhost:3001/parse.JWT", token, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log("토큰 검증 성공", res.data);
+        setUserData(res.data);
+      })
+      .catch((error) => {
+        console.error("토큰 검증 중 오류 발생:", error);
+      });
+  };
+
   const memberInfo = new FormData();
-  memberInfo.append("num", num);
-  memberInfo.append("admin", admin);
-  memberInfo.append("id", id);
-  memberInfo.append("pw", pw);
-  memberInfo.append("address", address);
+  memberInfo.append("num", userData?.num || "");
+  memberInfo.append("admin", userData?.admin || "");
+  memberInfo.append("id", userData?.id || "");
+  memberInfo.append("pw", userData?.pw || "");
+  memberInfo.append("address", userData?.address || "");
+  memberInfo.append("birth", userData?.birth || "");
+  memberInfo.append("email", userData?.email || "");
 
   const userEmail = new FormData();
   userEmail.append("email", email);
@@ -50,14 +62,11 @@ const MyPage = () => {
   };
   const [editmode, setEditMode] = useState(false);
 
-  // const splitAddress = userData.address.split(",");
-
   const AddressFinder = () => {
     if (window.daum && window.daum.Postcode) {
       new window.daum.Postcode({
         oncomplete: function (data) {
           const newAddress = data.address;
-          console.log("New Address:", newAddress); // 추가
           setAddress(newAddress);
           setAddressDetail("");
           document.querySelector("input[name=address]").value = newAddress;
@@ -73,44 +82,27 @@ const MyPage = () => {
 
   const updateUserInfo = () => {
     const mergedAddress = `${address},${addressDetail}`;
-    memberInfo.append("newEmail", email);
-    memberInfo.append("newAddress", mergedAddress);
+    memberInfo.delete("email");
+    memberInfo.delete("address");
+
+    memberInfo.append("email", email);
+    memberInfo.append("address", mergedAddress);
 
     axios
       .post("http://localhost:3001/member.update", memberInfo, {
         withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: {},
       })
       .then((res) => {
         console.log("업데이트 성공", res.data);
-        connectionCheck();
+        sessionStorage.removeItem("token");
+        alert("업데이트 성공, 다시 로그인해주세요")
         setEditMode(false);
+        setUserData(res.data);
+        navigate("/");
       })
       .catch((error) => {
         console.error("업데이트 오류: ", error);
-      });
-  };
-
-  const connectionCheck = () => {
-    axios
-      .post("http://localhost:3001/parse.JWT", token, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log("토큰 검증 성공", res.data);
-        setUserData(res.data);
-        console.log(res.data);
-        console.log(token);
-      })
-      .catch((error) => {
-        console.error("토큰 검증 중 오류 발생:", error);
       });
   };
 
@@ -141,7 +133,7 @@ const MyPage = () => {
       alert("인증 코드를 입력하세요");
       return;
     }
-    //코드 확인용 append 값
+
     const userCode = new FormData();
     userCode.append("verificationCode", verificationCode);
 
@@ -161,13 +153,10 @@ const MyPage = () => {
         console.error("인증 확인 요청 실패:", error);
 
         if (error.response) {
-          // 서버 응답 왔을때
           alert("서버 오류 : " + error.response.status);
         } else if (error.request) {
-          //요청은 가는데 응답이 안올때
           alert("서버 응답 오류");
         } else {
-          // 요청 전송전에 에러발생
           alert("요청 전송 중 오류 발생");
         }
       });
@@ -175,23 +164,20 @@ const MyPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("아이디:", userData.id);
-    console.log("비밀번호:", userData.pw);
-    console.log("생년월일:", userData.birth);
-    console.log("이메일:", userData.email);
-    console.log("주소:", userData.address);
+    console.log("아이디:", userData?.id || "");
+    console.log("비밀번호:", userData?.pw || "");
+    console.log("생년월일:", userData?.birth?.substring(0, 10) || "");
+    console.log("이메일:", email);
+    console.log("주소:", address);
   };
 
   const delInfo = () => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem(userData);
-    // sessionStorage.removeItem(userData);
-    // sessionStorage.removeItem("userData");
-
-    // 회원 탈퇴를 서버에 요청
+    
     axios
       .delete("http://localhost:3001/join.out", {
-        params: { id: userData.id },
+        params: { id: userData?.id || "" },
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
@@ -200,12 +186,10 @@ const MyPage = () => {
       })
       .then((res) => {
         console.log("회원 탈퇴 성공:", res.data);
-        // 회원 탈퇴에 성공하면 페이지를 리로드하여 로그아웃 처리 등을 수행할 수 있습니다.
         window.location.reload("/");
       })
       .catch((error) => {
         console.error("회원 탈퇴 오류:", error);
-        // TODO: 오류 처리 로직 추가
       });
   };
 
@@ -226,6 +210,19 @@ const MyPage = () => {
       document.body.removeChild(script);
     };
   }, []);
+
+  useEffect(() => {
+    if (userData) {
+      const memberInfo = new FormData();
+      memberInfo.append("num", userData.num);
+      memberInfo.append("admin", userData.admin);
+      memberInfo.append("id", userData.id);
+      memberInfo.append("pw", userData.pw);
+      memberInfo.append("address", userData.address);
+      memberInfo.append("birth", userData.birth);
+      memberInfo.append("email", userData.email);
+    }
+  }, [userData]);
 
   const containerStyle = {
     backgroundColor: "#17171e",
@@ -310,7 +307,6 @@ const MyPage = () => {
     justifyContent: "space-evenly",
   };
 
-
   return (
     <div style={containerStyle}>
       {userData ? (
@@ -391,23 +387,18 @@ const MyPage = () => {
             <button style={confirmStyle} onClick={updateUserInfo}>
               수정 완료
             </button>
-            {/* <button style={confirmStyle} onClick={delInfo}>
-              삭제
-            </button> */}
           </form>
         </div>
       ) : (
         <label style={labelStyle}>
-            <div style={buttonContainerStyle}>
-              <Link to={"/signin"}>
-                <Btn2 classname={classNames("aa", "bb")}>로그인</Btn2>
-              </Link>
-              <Link to={"/"}>
-                <Btn2 classNames={classNames("aa", "bb")}>
-                  홈으로
-                </Btn2>
-              </Link>
-            </div>
+          <div style={buttonContainerStyle}>
+            <Link to={"/signin"}>
+              <Btn2 classname={classNames("aa", "bb")}>로그인</Btn2>
+            </Link>
+            <Link to={"/"}>
+              <Btn2 classNames={classNames("aa", "bb")}>홈으로</Btn2>
+            </Link>
+          </div>
         </label>
       )}
     </div>

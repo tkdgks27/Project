@@ -12,6 +12,27 @@ const bodyStyle = {
 const BoardList = () => {
   const navigate = useNavigate();
   const [BoardList, setBoardList] = useState([]);
+  const token = sessionStorage.getItem("token");
+
+  const connectionCheck = () => {
+    axios
+    .post("http://localhost:3001/parse.JWT", token, {
+        withCredentials: true,
+        headers: {
+            "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+          },
+      })
+      .then((res) => {
+          console.log("토큰 검증 성공", res.data);
+      // console.log("title :", title);
+      // console.log("subject :", subject);
+      // console.log("file :", file);
+  })
+  .catch((error) => {
+      console.error("토큰 검증 중 오류 발생:", error);
+  });
+};
 
   const getBoardList = async () => {
     const response = await (await axios.get("http://localhost:3001/write.do")).data
@@ -26,7 +47,7 @@ const BoardList = () => {
   };
 
   useEffect(() => {
-    getBoardList();
+    connectionCheck();
   }, []);
 
   return (

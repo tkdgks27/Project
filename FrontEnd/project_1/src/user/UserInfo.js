@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const UserInfo = () => {
   const [userData, setUserData] = useState(null);
@@ -249,8 +250,45 @@ const UserInfo = () => {
     fontSize: "10px",
     whiteSpace: "nowrap",
   };
+
+  const mainlogoStyle = {
+    position: "absolute",
+    left: "20px",
+    top: "20px",
+  };
+  
+  const mainmenubxStyle = {
+    position: "absolute",
+    left: "140px",
+    top: "50px",
+  };
+  
+  const bodyStyle = {
+    backgroundColor: "#17171e",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+    paddingTop: 70,
+    paddingBottom: 0,
+  };
+
+  const homeStyle = {
+    marginTop: "-7px",
+    marginLeft: "340px",
+    cursor: "pointer",
+    backgroundColor: "grey",
+    color: "#fff",
+    border: "2px solid #fff",
+    borderRadius: "5px",
+    padding: "10px",
+    fontSize: "10px",
+    whiteSpace: "nowrap",
+  };
+  
   
   return (
+    
     <div style={containerStyle}>
       {userData ? (
         <div>
@@ -318,6 +356,11 @@ const UserInfo = () => {
               onChange={(e) => setAddressDetail(e.target.value)}
               placeholder="상세주소"
               />
+              <Link to={"/"}>
+                <button style={homeStyle}>
+                홈으로
+                </button>
+              </Link>
             <button style={confirmStyle} onClick={updateUserInfo}>
               수정 완료
             </button>

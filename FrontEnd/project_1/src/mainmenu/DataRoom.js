@@ -18,7 +18,7 @@ const DataRoom = () => {
 
   const connectionCheck = () => {
     axios
-    .post("http://localhost:3001/data.uploadd", token, {
+    .post("http://localhost:3001/parse.JWT", token, {
         withCredentials: true,
         headers: {
             "Content-Type": "application/json",
@@ -56,9 +56,9 @@ const sendVideoChunks = async () => {
     formData.append("totalChunks", totalChunks);
 
     try {
-      const resp = await axios.post("/post.get", formData, {
+      const resp = await axios.post("http://localhost:3001/data.uploadd", formData, {
         headers: {
-          Authorization: `Bearer ${token}`, // 토큰을 Authorization 헤더에 추가
+          // Authorization: `Bearer ${token}`, // 토큰을 Authorization 헤더에 추가
         },
       });
 
@@ -85,7 +85,7 @@ const sendVideoChunks = async () => {
 const handleDownload = async () => {
   try {
     // 파일 다운로드 API 호출
-    const resp = await axios.get("/post.get", {
+    const resp = await axios.get("http://localhost:3001/post.get", {
       responseType: 'blob', 
       headers: {
         Authorization: `Bearer ${token}`, 
@@ -107,7 +107,7 @@ const handleDownload = async () => {
 }
 
 useEffect(() => {
-  connectionCheck();})
+  connectionCheck();}, [])
 
 
 const bodyStyle = {
@@ -120,11 +120,52 @@ const bodyStyle = {
   paddingBottom: 0,
 };
 
+const mainlogoStyle = {
+  position: "absolute",
+  left: "20px",
+  top: "20px",
+};
+
+const mainmenubxStyle = {
+  position: "absolute",
+  left: "140px",
+  top: "50px",
+};
 
 
 
-  return <>
-    <Link to="/">홈으로</Link>
+
+
+  return (
+
+    <div style={bodyStyle}>
+            <div style={mainlogoStyle} className="mainlogo">
+        <a href="/" className="homeds">
+          AI를 활용한
+          <br />
+          음성합성 프로그램
+        </a>
+      </div>
+      <div style={mainmenubxStyle} className="mainmenubx">
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/board" className="boardds">
+          게시판
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/qna" className="qnads">
+          Q&A
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/suggestions" className="sugds">
+          건의사항
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/dataroom" className="dtrds">
+          DataRoom
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+      </div>
+    {/* <Link to="/">홈으로</Link> */}
     <div style={bodyStyle}>
       <input id="video-file" type="file" name="file" />
       <button onClick={sendVideoChunks}>업로드</button>
@@ -132,8 +173,9 @@ const bodyStyle = {
 
       <button onClick={handleDownload}>다운로드</button>
     </div>
-  
-  </>;
+    </div>
+
+  )
 };
 
 

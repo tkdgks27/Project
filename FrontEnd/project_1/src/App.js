@@ -21,11 +21,13 @@ import GoInfo from './user/goInfo';
 import BoardDetail from './mainmenu/BoardDetail';
 import NewBoard from './mainmenu/newBoard';
 import DataRoom from './mainmenu/DataRoom';
+// import Header from './layout/Header';
 
 
 function App() {
   return (
     <Router>
+      {/* <Header /> */}
       <Routes>
       <Route path="/" element={<Main />} />
         <Route path="/gallery" element={<FileUpload />} />

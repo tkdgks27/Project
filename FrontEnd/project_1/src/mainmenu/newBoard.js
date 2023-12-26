@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 // title subject file 넣을 수 있게
 
 // 토큰으로 작성자 식별하고
@@ -30,6 +31,8 @@ const NewBoard = () => {
   const [id, setId] = useState("");
   const [num, setNum] = useState("");
   const [userData, setUserData] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [myid, setMyId] = useState("");
   
   const fileInput = useRef();
   
@@ -39,7 +42,7 @@ const NewBoard = () => {
           withCredentials: true,
           headers: {
               "Content-Type": "application/json",
-              //   Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
             },
         })
         .then((res) => {
@@ -48,6 +51,7 @@ const NewBoard = () => {
         console.log(res.data.id);
         console.log(res.data.num);
         console.log(userData);
+        setMyId(res.data);
         // console.log("title :", title);
         // console.log("subject :", subject);
         // console.log("file :", file);
@@ -91,11 +95,11 @@ const saveBoard = () => {
         // console.log("num:", num);
         console.error("저장실패: ", error);
         console.log(JSON.stringify(board));
-        console.log(board);
-        console.log(userData);
+        console.log(board.id);
+        console.log(userData.id);
         // console.log("Token Value: ", tokenString);
         
-
+        
         if (error.response) {
           // 서버 응답 왔을때
           alert("서버 오류 : " + error.response.status);
@@ -118,16 +122,7 @@ const saveBoard = () => {
     navigate("/board");
   }
 
-  const bodyStyle = {
-    backgroundColor: "#17171e",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: "100vh",
-    paddingTop: 70,
-    paddingBottom: 0,
-  };
-
+  
   const formStyle = {
     width: "1000px",
     padding: "20px",
@@ -136,13 +131,13 @@ const saveBoard = () => {
     backgroundColor: "#1f1f2e",
     color: "#fff",
   };
-
+  
   const labelStyle = {
     display: "flex",
     flexDirection: "column",
     marginBottom: "15px",
   };
-
+  
   const getDynamicInputStyle = () => {
     return {
       width: "300px",
@@ -155,7 +150,7 @@ const saveBoard = () => {
       outline: "none",
     };
   };
-
+  
   const inputStyle = {
     width: "300px",
     padding: "10px",
@@ -166,7 +161,7 @@ const saveBoard = () => {
     color: "#fff",
     outline: "none",
   };
-
+  
   const buttonStyle = {
     marginTop: "-7px",
     marginLeft: "15px",
@@ -179,14 +174,101 @@ const saveBoard = () => {
     fontSize: "10px",
     whiteSpace: "nowrap",
   };
-
+  
   const detailstyle = {
     width: "1000px",
     height: "500px",
-};
-
+  };
+  
+  const mainlogoStyle = {
+    position: "absolute",
+    left: "20px",
+    top: "20px",
+  };
+  
+  const mainmenubxStyle = {
+    position: "absolute",
+    left: "140px",
+    top: "50px",
+  };
+  
+  const bodyStyle = {
+    backgroundColor: "#17171e",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100vh",
+    paddingTop: 70,
+    paddingBottom: 0,
+  };
+  
+  const mypagebxStyle = {
+    position: "absolute",
+    right: "20px",
+    top: "20px",
+    display: "flex",
+    alignItems: "center",
+  };
+  
+  const welcomeStyle = {
+    marginRight: "20px",
+  };
+  
+  
   return (
     <div style={bodyStyle}>
+            <div style={mainlogoStyle} className="mainlogo">
+        <a href="/" className="homeds">
+          AI를 활용한
+          <br />
+          음성합성 프로그램
+        </a>
+      </div>
+      <div style={mainmenubxStyle} className="mainmenubx">
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/board" className="boardds">
+          게시판
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/qna" className="qnads">
+          Q&A
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/suggestions" className="sugds">
+          건의사항
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <a href="/dataroom" className="dtrds">
+          DataRoom
+        </a>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+      </div>
+
+      {/* <div style={mypagebxStyle} className="mypagebx">
+        {isLoggedIn ? (
+          <form style={formStyle}>
+            <p style={welcomeStyle}>{myid.id}님, 안녕하세요! </p>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="/mypage" className="mpds">
+              MyPage
+            </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="/logout" className="logoutds">
+              LogOut
+            </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+          </form>
+        ) : (
+          <>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+            <a href="/signin" className="loginds">
+              로그인
+            </a>
+            &nbsp;&nbsp;|&nbsp;&nbsp;
+          </>
+        )}
+      </div> */}
+      
       <div style={formStyle}>
         <label style={labelStyle}>
           제목:
