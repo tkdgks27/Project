@@ -157,13 +157,15 @@ public class MemberCon {
 //					parse.setAddress(resm.getAddress());
 //				}
 //				return jpa.save(parse);
+		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+		res.addHeader("Access-Control-Allow-Credentials", "true");
 		if(!resm.getPw().equals(mDAO.getInfo(resm).getPw())) {
-			resm.setPw(resm.getPw());
+			resm.setPw(mDAO.encodeBcrypt(resm));
 		}
-		if(!resm.getPw().equals(mDAO.getInfo(resm).getEmail())) {
+		if(!resm.getEmail().equals(mDAO.getInfo(resm).getEmail())) {
 			resm.setEmail(resm.getEmail());
 		}
-		if(!resm.getPw().equals(mDAO.getInfo(resm).getAddress())) {
+		if(!resm.getAddress().equals(mDAO.getInfo(resm).getAddress())) {
 			resm.setAddress(resm.getAddress());
 		}
 		resm.setNum(mDAO.getInfo(resm).getNum());
