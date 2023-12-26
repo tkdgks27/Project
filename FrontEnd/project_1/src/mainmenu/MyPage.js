@@ -26,6 +26,8 @@ const MyPage = () => {
   const [num, setNum] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
   const [birth, setBirth] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [isPasswordMatch, setIsPasswordMatch] = useState(true);
 
   const connectionCheck = () => {
     axios
@@ -81,12 +83,51 @@ const MyPage = () => {
   };
 
   const updateUserInfo = () => {
+    if (!pw && !email && !address) {
+      alert("수정할 정보를 입력하세요");
+      return;
+    }
     const mergedAddress = `${address},${addressDetail}`;
-    memberInfo.delete("email");
-    memberInfo.delete("address");
+    const updatedMemberInfo = new FormData();
+    updatedMemberInfo.append("num", userData?.num || "");
+    updatedMemberInfo.append("admin", userData?.admin || "");
+    updatedMemberInfo.append("id", userData?.id || "");
+    updatedMemberInfo.append("birth", userData?.birth || "");
+    updatedMemberInfo.append("email", email || userData?.email); 
+    updatedMemberInfo.append("address", address !== "" ? mergedAddress : userData?.address);
+    updatedMemberInfo.append("pw", pw || userData?.pw); 
 
-    memberInfo.append("email", email);
-    memberInfo.append("address", mergedAddress);
+    axios
+    .post("http://localhost:3001/member.update", updatedMemberInfo, {
+      withCredentials: true,
+      headers: {},
+    })
+    .then((res) => {
+      console.log("업데이트 성공", res.data);
+      sessionStorage.removeItem("token");
+      alert("업데이트 성공, 다시 로그인해주세요");
+      setEditMode(false);
+      setUserData(res.data);
+      navigate("/");
+    })
+    .catch((error) => {
+      console.error("업데이트 오류: ", error);
+      // alert("회원정보를 모두 입력해주세요.");
+    });
+
+    // memberInfo.delete("email");
+    // memberInfo.delete("address");
+    // memberInfo.delete("pw");
+
+    // if (email) {
+    //   memberInfo.append("email", email);
+    // }
+    // if (address) {
+    //   memberInfo.append("address", mergedAddress);
+    // }
+    // if (pw) {
+    //   memberInfo.append("pw", pw);
+    // }
 
     axios
       .post("http://localhost:3001/member.update", memberInfo, {
@@ -96,13 +137,14 @@ const MyPage = () => {
       .then((res) => {
         console.log("업데이트 성공", res.data);
         sessionStorage.removeItem("token");
-        alert("업데이트 성공, 다시 로그인해주세요")
+        alert("업데이트 성공, 다시 로그인해주세요");
         setEditMode(false);
         setUserData(res.data);
         navigate("/");
       })
       .catch((error) => {
         console.error("업데이트 오류: ", error);
+        alert("회원정보를 모두 입력해주세요.")
       });
   };
 
@@ -174,7 +216,7 @@ const MyPage = () => {
   const delInfo = () => {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem(userData);
-    
+
     axios
       .delete("http://localhost:3001/join.out", {
         params: { id: userData?.id || "" },
@@ -223,6 +265,21 @@ const MyPage = () => {
       memberInfo.append("email", userData.email);
     }
   }, [userData]);
+
+  const handlePasswordChange = (value) => {
+    setPw(value);
+    checkPasswordMatch(pw, value);
+  };
+
+  const handleConfirmPasswordChange = (value) => {
+    setConfirmPassword(value);
+    checkPasswordMatch(pw, value);
+  };
+
+  const checkPasswordMatch = (password, confirmPassword) => {
+    const isMatch = password === confirmPassword;
+    setIsPasswordMatch(isMatch);
+  };
 
   const containerStyle = {
     backgroundColor: "#17171e",
@@ -314,7 +371,46 @@ const MyPage = () => {
           <form onSubmit={handleSubmit} style={formStyle}>
             <p>아이디: {userData.id}</p>
             <br />
-            <p>비밀번호: ******</p>
+            <label style={labelStyle}>
+              <p>비밀번호: ******</p>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <input
+                  name="pw"
+                  type="password"
+                  value={pw}
+                  onChange={(e) => handlePasswordChange(e.target.value)}
+                  style={getDynamicInputStyle()}
+                  placeholder="새 비밀번호"
+                />
+              </div>
+            </label>
+
+            <label style={labelStyle}>
+              비밀번호 확인:
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => handleConfirmPasswordChange(e.target.value)}
+                  style={getDynamicInputStyle()}
+                  placeholder="비밀번호 확인"
+                />
+                {isPasswordMatch ? (
+                  <span style={{ color: "green", marginLeft: "5px" }}>✔</span>
+                ) : (
+                  <span style={{ color: "red", marginLeft: "5px" }}>✘</span>
+                )}
+              </div>
+            </label>
+            {/* <input
+              type="password"
+              value={pw}
+              style={inputStyle}
+              onChange={(e) => {
+              setPw(e.target.value);}}
+              placeholder="새 비밀번호"
+            />
+            </label> */}
             <br />
             <p>생년월일: {userData.birth && userData.birth.substring(0, 10)}</p>
             <br />

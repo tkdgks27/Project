@@ -147,9 +147,28 @@ const SignIn = () => {
     fontSize: "12px",
     marginTop: "5px",
   };
+  
+  const gohome = {
+    width: "120px",
+    height: "60px",
+    margin: "10px", 
+    position: "absolute",
+    top: "0", 
+    left: "0", 
+    color: "white",
+    backgroundColor: "#17171e",
+    fontSize: "20px",
+    border: "2px solid purple",
+    borderRadius: "20%",
+    padding: "10px",
+    cursor: "pointer",
+  }
 
   return (
     <div style={bodyStyle}>
+      <Link to={"/"}>
+        <button style={gohome}>홈으로</button>
+      </Link>
       <form style={formStyle}>
         <input
           name="id"

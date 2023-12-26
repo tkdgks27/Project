@@ -47,7 +47,9 @@ const UserInfo = () => {
         },
       }).open();
     } else {
-      console.error("Daum Postcode script not loaded or Postcode object not available");
+      console.error(
+        "Daum Postcode script not loaded or Postcode object not available"
+      );
     }
   };
 
@@ -55,6 +57,7 @@ const UserInfo = () => {
     const mergedAddress = `${address},${addressDetail}`;
     memberInfo.append("newEmail", email);
     memberInfo.append("newAddress", mergedAddress);
+    memberInfo.append("newpw", pw);
 
     axios
       .post("http://localhost:3001/join.do", memberInfo, {
@@ -151,7 +154,7 @@ const UserInfo = () => {
       });
   };
 
-    const handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     console.log("아이디:", userData.id);
     console.log("비밀번호:", userData.pw);
@@ -256,13 +259,13 @@ const UserInfo = () => {
     left: "20px",
     top: "20px",
   };
-  
+
   const mainmenubxStyle = {
     position: "absolute",
     left: "140px",
     top: "50px",
   };
-  
+
   const bodyStyle = {
     backgroundColor: "#17171e",
     display: "flex",
@@ -285,10 +288,8 @@ const UserInfo = () => {
     fontSize: "10px",
     whiteSpace: "nowrap",
   };
-  
-  
+
   return (
-    
     <div style={containerStyle}>
       {userData ? (
         <div>
@@ -296,6 +297,14 @@ const UserInfo = () => {
             <p>아이디: {userData.id}</p>
             <br />
             <p>비밀번호: ****** </p>
+            <input
+              type="password"
+              value={pw}
+              style={inputStyle}
+              onChange={(e) => {
+              setPw(e.target.value);}}
+              placeholder="새 비밀번호"
+            />
             <br />
             <p>생년월일: {userData.birth}</p>
             <br />
@@ -307,7 +316,7 @@ const UserInfo = () => {
                 style={inputStyle}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="새 이메일"
-                />
+              />
             </label>
             <button onClick={SendCode} style={buttonStyle}>
               코드전송
@@ -323,13 +332,13 @@ const UserInfo = () => {
                     setVerificationCode(e.target.value);
                   }}
                   style={inputStyle}
-                  />
+                />
                 <button
                   name="check.code"
                   type="button"
                   onClick={codeCheck}
                   style={buttonStyle}
-                  >
+                >
                   코드확인
                 </button>
               </div>
@@ -343,7 +352,7 @@ const UserInfo = () => {
                 value={address}
                 style={inputStyle}
                 placeholder="새 주소"
-                />
+              />
             </label>
             <button style={buttonStyle} onClick={AddressFinder}>
               주소찾기
@@ -355,12 +364,10 @@ const UserInfo = () => {
               style={inputStyle}
               onChange={(e) => setAddressDetail(e.target.value)}
               placeholder="상세주소"
-              />
-              <Link to={"/"}>
-                <button style={homeStyle}>
-                홈으로
-                </button>
-              </Link>
+            />
+            <Link to={"/"}>
+              <button style={homeStyle}>홈으로</button>
+            </Link>
             <button style={confirmStyle} onClick={updateUserInfo}>
               수정 완료
             </button>
@@ -368,7 +375,7 @@ const UserInfo = () => {
         </div>
       ) : (
         <p>Loading...</p>
-        )}
+      )}
     </div>
   );
 };
