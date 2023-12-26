@@ -27,7 +27,6 @@ public class CommunityCon {
 	@PostMapping(value="/write.do",
 			produces="application/json; charset=utf-8")
 	public CommunityDTO post(@RequestBody JwtToken mjwt, CommunityDTO cDTO, MultipartFile mf, HttpServletResponse res) {
-		System.out.println("aa");
 		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 		res.addHeader("Access-Control-Allow-Credentials", "true");
 		

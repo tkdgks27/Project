@@ -53,8 +53,6 @@ public class AdminCon {
 				 produces = "application/json; charset=utf-8")
 	public ResponseEntity<DataRoomDTO> upload( JwtToken mjwt, DataRoomDTO dDTO , MultipartFile mf ,int chunkNumber, int totalChunks ,HttpServletResponse res) {
 		ResMemberDTO parse = mDAO.parseJWT(mjwt);
-		res.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
-		res.addHeader("Access-Control-Allow-Credentials", "true");
 		dDTO.setId(parse.getId());
 		dDTO.setFile(dr.getPath() + mf.getOriginalFilename());
 		if(!parse.getAdmin().isEmpty()) {
