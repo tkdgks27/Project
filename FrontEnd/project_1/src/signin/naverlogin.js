@@ -7,8 +7,8 @@ import { useHistory, useNavigate } from 'react-router-dom'
 
 
 const Naverlogin = () => {
+
   
-  const clientId = 'NCXl7jpKm7KDwpD6yaB7';
   const redirectUri = 'http://localhost:3000';
   
   const navigate = useNavigate();
